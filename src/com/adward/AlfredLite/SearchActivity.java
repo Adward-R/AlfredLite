@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
@@ -39,7 +40,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Collimator ����������������?�����ʾ�Ȳ�����
+ * Collimator 锟斤拷锟筋动锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟�锟斤拷锟斤拷锟绞撅拷炔锟斤拷锟斤拷锟� * 
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2011.0515
  */
@@ -102,14 +103,14 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	final List<Match> mSearchResult = new ArrayList<Match>();
 	MatchAdapter mListAdapter;
 	SimpleAdapter mAdapter; //adapter for newly implemented functions
-	// ��ǰ״̬����
+	// 锟斤拷前状态锟斤拷锟斤拷
 	Match mSelectedMatch;
 	Expression mExpression;
 	boolean isSearching = false;
 	boolean isPickMode = false;
 	boolean isRangeLocked = false;
 	long startTick = 0;
-	// ��ѡ�����
+	// 锟斤拷选锟斤拷锟斤拷锟�	
 	boolean isTapView = true;
 	boolean isDeletePermitted = false;
 	boolean isReloadWithoutPrompt = false;
@@ -119,7 +120,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	//search key
 	String appCmd;
 	String contactCmd;
-	// ����ؼ�
+	// 锟斤拷锟斤拷丶锟�	
 	ImageButton mButtonRange;
 	ImageButton mButtonStar;
 	EditText mEditSearch;
@@ -156,6 +157,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
 
 	private void initUtils() {
+		initDatabase();
         System.out.println("initUtils");
        	Intent intent = new Intent();
        	intent.setClass(SearchActivity.this, SearchActivity.class);
@@ -237,13 +239,13 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
        	}
        	
        	mEditSearch.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable arg0) { }
+			public void afterTextChanged(Editable arg0) {mEditSearch.requestFocus(); }
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				mExpression.setKey(s.toString());
 				doSearch();
+				mEditSearch.requestFocus();
 			}});
-		mEditSearch.requestFocus();
 	}
 
 	private void updatePreferences() {
@@ -883,6 +885,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		mNotificationManager.notify(0, mReloadNotification);
 		Matcher.stopAsyncMatch();
         Index.reloadEntriesAsync();
+        reloadDatabase();
 	}
 	
 	private void enterPickMode(int type, boolean lock) {
@@ -944,10 +947,9 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
     
 	/**
-	 * �ж�һ�� Intent ��ϵͳ���Ƿ��ж�Ӧ�Ļ���Դ��?
-	 * @param intent	Ҫ�����жϵ� Intent��
-	 * @return	�� Intent �Ƿ���Ա�����
-	 */
+	 * 锟叫讹拷一锟斤拷 Intent 锟斤拷系统锟斤拷锟角凤拷锟叫讹拷应锟侥活动锟斤拷锟皆达拷锟�
+	 * @param intent	要锟斤拷锟斤拷锟叫断碉拷 Intent锟斤拷
+	 * @return	锟斤拷 Intent 锟角凤拷锟斤拷员锟斤拷锟斤拷锟�	 */
 	private boolean isIntentAvailable(Intent intent) {
         System.out.println("isIntentAvailable");
 	    final PackageManager packageManager = getPackageManager(); 
@@ -1103,7 +1105,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		}
 	}
 
-	public List<Map<String,Object>> getUserContacts(String[] keys) {
+	/*public List<Map<String,Object>> getUserContacts(String[] keys) {
 		Uri uri = Uri.parse("content://com.android.contacts/contacts");
 		ContentResolver resolver = this.getContentResolver();
 		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
@@ -1135,15 +1137,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 						}
 					}
 					contact.put("contactName",data1);
-				} /*
-                else if ("vnd.android.cursor.item/email_v2".equals(mimeType)) { // Is Email
-                    if (data1==null){
-                        break;
-                    }
-                    if (!TextUtils.isEmpty(data1)) {
-                        contact.put("contactMail",data1);
-                    }
-                } */
+				} 
 				else if ("vnd.android.cursor.item/phone_v2".equals(mimeType)) { // Is Phone Number
 					if (data1==null){
 						break;
@@ -1157,15 +1151,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 					}
 					//System.out.println("~~"+data1+"~~");
 					contact.put("contactPhoneNum",phoneNum);
-				}/*
-                else if ("vnd.android.cursor.item/photo".equals(mimeType)){
-                    if (data1==null){
-                        break;
-                    }
-                    System.out.println("__PHOTO GET");2
-                    contact.put("contactPhoto",data1);
-                }*/
-
+				}
 			}
 			if (flag1==0||flag2==0) {
 				contacts.add(contact);
@@ -1174,5 +1160,102 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		}
 		cursor.close();
 		return contacts;
+	}*/
+
+	public void initDatabase(){
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		System.out.println("~haha~~~");
+		db.execSQL("drop table data");
+		db.execSQL("create table data ( " +
+				  "contactName varchar(20)," +
+				  "contactPhoneNum varchar(20)" +
+				  ")");
+		System.out.println("~~~haha~~~");
+		db.execSQL("create index data1_index on data(contactName,contactPhoneNum)");
+
+		Uri uri = Uri.parse("content://com.android.contacts/contacts");
+		ContentResolver resolver = this.getContentResolver();
+		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
+		
+		while (cursor.moveToNext()) {
+			int contactID = cursor.getInt(0);
+			uri = Uri.parse("content://com.android.contacts/contacts/"
+					+ contactID + "/data");
+			Cursor cursor1 = resolver.query(uri, new String[] { "mimetype",
+					"data1" }, null, null, null);
+			
+			ContentValues cValue = new ContentValues();
+			while (cursor1.moveToNext()){
+				String data1 = cursor1.getString(cursor1.getColumnIndex("data1"));
+				String mimeType = cursor1.getString(cursor1.getColumnIndex("mimetype"));
+				if(mimeType.equals("vnd.android.cursor.item/name"))
+					cValue.put("contactName", data1.toLowerCase());
+				if(mimeType.equals("vnd.android.cursor.item/phone_v2"))
+					cValue.put("contactPhoneNum", data1.toLowerCase());
+			}
+            db.insert("data",null, cValue);
+		}
+		db.close();
 	}
+	
+	
+	public void reloadDatabase(){
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		
+		db.execSQL("drop table data");
+		db.execSQL("create table data ( " +
+				"contactName varchar(20)," +
+				"contactPhoneNum varchar(20)" +
+				")");
+		db.execSQL("create index data1_index on data(contactName,contactPhoneNum)");
+		Uri uri = Uri.parse("content://com.android.contacts/contacts");
+		ContentResolver resolver = this.getContentResolver();
+		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
+		
+		while (cursor.moveToNext()) {
+			int contactID = cursor.getInt(0);
+			uri = Uri.parse("content://com.android.contacts/contacts/"
+					+ contactID + "/data");
+			Cursor cursor1 = resolver.query(uri, new String[] { "mimetype",
+					"data1"}, null, null, null);
+			
+			ContentValues cValue = new ContentValues();
+			while (cursor1.moveToNext()){
+				String data1 = cursor1.getString(cursor1.getColumnIndex("data1"));
+				String mimeType = cursor1.getString(cursor1.getColumnIndex("mimetype"));
+				if(mimeType.equals("vnd.android.cursor.item/name"))
+					cValue.put("contactName", data1.toLowerCase());
+				if(mimeType.equals("vnd.android.cursor.item/phone_v2"))
+					cValue.put("contactPhoneNum", data1.toLowerCase());
+			}
+          db.insert("data",null, cValue);
+		}
+		db.close();
+	}
+	
+	public List<Map<String,Object>> getUserContacts(String[] keys) {
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		List<Map<String,Object>> contacts = new ArrayList<Map<String,Object>>();
+		String TotalKey = "%";
+		for(int j = 1;j < keys.length;j++){
+			TotalKey += keys[j].toLowerCase();
+			TotalKey += "%";
+		}
+        Cursor cursor = db.rawQuery("SELECT contactName,contactPhoneNum FROM data WHERE contactName like "
+                                        +"'"+TotalKey+"'"+" or "+ 
+        		                         "contactPhoneNum like "
+                                        +"'"+TotalKey+"'", null);
+	   
+        if(cursor.moveToFirst()){
+        	for(int i = 0; i < cursor.getCount();i++){
+                 	Map<String,Object> contact = new HashMap<String, Object>();
+        	 	    contact.put("contactName", cursor.getString(cursor.getColumnIndex("contactName")));
+        	 	    contact.put("contactPhoneNum", cursor.getString(cursor.getColumnIndex("contactPhoneNum")));
+                	contacts.add(contact);    
+        	}
+        }
+        db.close();
+        return contacts;
+	 }
 }
+	

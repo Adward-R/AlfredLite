@@ -84,6 +84,7 @@
 	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <!-- 读联系人权限 -->
     <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS"/>
     <!-- 写联系人权限
     <uses-permission android:name="android.permission.WRITE_CONTACTS" /> -->
     <!-- 拨号权限 -->
