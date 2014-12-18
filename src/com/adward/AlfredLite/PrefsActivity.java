@@ -1,9 +1,10 @@
 package com.adward.AlfredLite;
 
 import android.os.Bundle;
+import android.preference.PreferenceActivity;
 import android.view.Window;
 
-public final class PrefsActivity extends android.preference.PreferenceActivity {
+public final class PrefsActivity extends PreferenceActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_LEFT_ICON); 

@@ -2,7 +2,6 @@ package com.adward.AlfredLite;
 
 import android.app.*;
 import android.content.*;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
@@ -26,6 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.adward.AlfredLite.bll.FileScannerService;
+import com.adward.AlfredLite.cmd.AppUtil;
 import com.adward.AlfredLite.data.Expression;
 import com.adward.AlfredLite.data.Index;
 import com.adward.AlfredLite.data.Match;
@@ -62,6 +62,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	private static final int DIALOG_CMD_CUSTOM = 13; //
 	private static final int DIALOG_CMD_APP = 14; //
 	private static final int DIALOG_CMD_CONTACT = 15; //
+	private static final int DIALOG_APP_OPEN_ERR = 16; //
 
 	private static final int DIALOG_INDEX_OBSOLETE = 100;
 	private static final int DIALOG_FIRST_LAUNCH = 101;
@@ -103,6 +104,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	final List<Match> mSearchResult = new ArrayList<Match>();
 	MatchAdapter mListAdapter;
 	SimpleAdapter mAdapter; //adapter for newly implemented functions
+	AppUtil appUtil;
 	//当前状态变量
 	Match mSelectedMatch;
 	Expression mExpression;
@@ -171,6 +173,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
         mReloadNotification.when = 0;		
     	mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
        	Index.init(getApplicationContext(), mEventHandler);
+		appUtil = new AppUtil(this);
 	}
 
 	private void initViews() {
@@ -625,6 +628,15 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 							}
 						})
 						.create();
+			case DIALOG_APP_OPEN_ERR:
+				return new AlertDialog.Builder(this).setTitle(R.string.dialog_app_open_err_title)
+						.setIcon(R.drawable.button_warning)
+						.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								//TODO get back to title or reload?
+							}
+						}).create();
 	}
 		return super.onCreateDialog(id);
 	}
@@ -724,9 +736,10 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
         System.out.println("onItemClick");
 		if (mode==1){
 			try {
-				openApp(apps.get(position).get("pkgName").toString());
+				appUtil.openApp(apps.get(position).get("pkgName").toString());
 			} catch (PackageManager.NameNotFoundException e) {
-				e.printStackTrace(); //need a dialog
+				showDialog(DIALOG_APP_OPEN_ERR);
+				//e.printStackTrace(); //TODO: need a dialog
 			}
 		}
 		else if(mode==2){
@@ -798,13 +811,13 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 				mode = 1;
 				isSearching = false;
 				if (str.length>1) {
-					apps = getUserApps(GlobalContext.getInstance(),str);
+					apps = appUtil.getUserApps(this,str);
 				}
 				else {
 					String _str[] = {appCmd, ""};
-					apps = getUserApps(GlobalContext.getInstance(),_str);
+					apps = appUtil.getUserApps(this,_str);
 				}
-				mAdapter = new SimpleAdapter(GlobalContext.getInstance(),apps,
+				mAdapter = new SimpleAdapter(this,apps,
 						R.layout.listitem_apps,
 						new String[] {"pkgIcon","pkgLabel","pkgName"},
 						new int[] {R.id.thumbnail,R.id.filename,R.id.filepath});
@@ -1048,63 +1061,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		}
 	}
 
-	public List<Map<String,Object>> getUserApps(Context context,String[] keys) {
-		List<Map<String,Object>> apps = new ArrayList<Map<String,Object>>();
-		PackageManager pManager = context.getPackageManager();
-		//Obtain all installed app info in the cell phone
-		List<PackageInfo> paklist = pManager.getInstalledPackages(0);
-		for (int i = 0; i < paklist.size(); i++) {
-			PackageInfo pak = paklist.get(i);
-			//See if the app is not pre-installed (user installed)
-			if ((pak.applicationInfo.flags & pak.applicationInfo.FLAG_SYSTEM) <= 0) {
-				// customs applications
-				String pkgLabel = pManager.getApplicationLabel(pak.applicationInfo).toString();
-				int flag = 0;
-				for (int j=1;j<keys.length;j++){
-					if (!pkgLabel.toLowerCase().contains(keys[j].toLowerCase())){
-						flag++;
-						break;
-					}
-				}
 
-				if (flag==0) {
-					Map<String, Object> listItem = new HashMap<String, Object>();
-					listItem.put("pkgName", pak.packageName);
-					listItem.put("pkgLabel", pkgLabel);
-					//listItem.put("pkgInstallTime",)
-					//listItem.put("pkgIcon",pManager.getApplicationIcon(pak));
-					listItem.put("pkgIcon", pak.applicationInfo.loadIcon(pManager));
-					apps.add(listItem);
-					//System.out.println(pManager.getApplicationLabel(paklist.get(i).applicationInfo));
-				}
-			}
-		}
-		return apps;
-	}
-
-	private void openApp(String packageName) throws PackageManager.NameNotFoundException {
-		PackageInfo pi = getPackageManager().getPackageInfo(packageName, 0);
-
-		Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-		resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-		resolveIntent.setPackage(pi.packageName);
-
-		List<ResolveInfo> apps = getPackageManager().queryIntentActivities(resolveIntent, 0);
-
-		ResolveInfo ri = apps.iterator().next();
-		if (ri != null ) {
-			String pkgName = ri.activityInfo.packageName;
-			String className = ri.activityInfo.name;
-
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-			ComponentName cn = new ComponentName(pkgName, className);
-
-			intent.setComponent(cn);
-			startActivity(intent);
-		}
-	}
 
 	/*public List<Map<String,Object>> getUserContacts(String[] keys) {
 		Uri uri = Uri.parse("content://com.android.contacts/contacts");
