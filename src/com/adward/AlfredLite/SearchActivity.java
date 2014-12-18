@@ -159,7 +159,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
 
 	private void initUtils() {
-		//initDatabase();
+
         System.out.println("initUtils");
        	Intent intent = new Intent();
        	intent.setClass(SearchActivity.this, SearchActivity.class);
@@ -174,6 +174,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
     	mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
        	Index.init(getApplicationContext(), mEventHandler);
 		appUtil = new AppUtil(this);
+		initDatabase();
 	}
 
 	private void initViews() {
@@ -1122,36 +1123,59 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 
 	public void initDatabase(){
 		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
-		System.out.println("~haha~~~");
+
 		db.execSQL("drop table if exists data");
 		db.execSQL("create table data ( " +
 				  "contactName varchar(20)," +
 				  "contactPhoneNum varchar(20)" +
 				  ")");
-		System.out.println("~~~haha~~~");
+
 		db.execSQL("create index data1_index on data(contactName,contactPhoneNum)");
 
 		Uri uri = Uri.parse("content://com.android.contacts/contacts");
 		ContentResolver resolver = this.getContentResolver();
 		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
-		
+
 		while (cursor.moveToNext()) {
 			int contactID = cursor.getInt(0);
 			uri = Uri.parse("content://com.android.contacts/contacts/"
 					+ contactID + "/data");
 			Cursor cursor1 = resolver.query(uri, new String[] { "mimetype",
 					"data1" }, null, null, null);
-			
 			ContentValues cValue = new ContentValues();
+			boolean getName = false;
+			boolean FirstNumber =true;
+			boolean canBeInsert = true;
+			String ConName = "";
 			while (cursor1.moveToNext()){
 				String data1 = cursor1.getString(cursor1.getColumnIndex("data1"));
+				if(data1 == null) {
+					canBeInsert = false;
+					break;
+				}
 				String mimeType = cursor1.getString(cursor1.getColumnIndex("mimetype"));
-				if(mimeType.equals("vnd.android.cursor.item/name"))
+				if(mimeType.equals("vnd.android.cursor.item/name")){
 					cValue.put("contactName", data1.toLowerCase());
-				if(mimeType.equals("vnd.android.cursor.item/phone_v2"))
-					cValue.put("contactPhoneNum", data1.toLowerCase());
+					System.out.println(data1);
+					getName = true;
+					ConName = data1.toLowerCase();
+				}
+				if(mimeType.equals("vnd.android.cursor.item/phone_v2")) {
+					if(FirstNumber) {
+					   cValue.put("contactPhoneNum",data1);
+					   FirstNumber = false;
+					}
+					else
+					{
+						ContentValues newcValue = new ContentValues();
+						newcValue.put("contactName",ConName);
+						newcValue.put("contactPhoneNum",data1);
+						db.insert("data",null,newcValue);
+					}
+				}
 			}
-            db.insert("data",null, cValue);
+            if(canBeInsert)
+				db.insert("data", null, cValue);
 		}
 		db.close();
 	}
@@ -1207,9 +1231,13 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
         if(cursor.moveToFirst()){
         	for(int i = 0; i < cursor.getCount();i++){
                  	Map<String,Object> contact = new HashMap<String, Object>();
-        	 	    contact.put("contactName", cursor.getString(cursor.getColumnIndex("contactName")));
+				    System.out.println("__"+cursor.getString(cursor.getColumnIndex("contactName"))+"__");
+				System.out.println("~~~~~~");
+				System.out.println("__"+cursor.getString(cursor.getColumnIndex("contactPhoneNum"))+ "__");
+				contact.put("contactName", cursor.getString(cursor.getColumnIndex("contactName")));
         	 	    contact.put("contactPhoneNum", cursor.getString(cursor.getColumnIndex("contactPhoneNum")));
-                	contacts.add(contact);    
+                	contacts.add(contact);
+				    cursor.moveToNext();
         	}
         }
         db.close();
