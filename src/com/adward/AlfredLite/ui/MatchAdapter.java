@@ -1,20 +1,19 @@
 package com.adward.AlfredLite.ui;
 
-import java.util.List;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.adward.AlfredLite.R;
 import com.adward.AlfredLite.data.Match;
 import com.adward.AlfredLite.util.FileInfo;
 
+import java.util.List;
+
 /**
- * Á¬½Ó ListView ¼°ÆäÆ¥Åä½á¹û¼¯µÄÊÊÅäÆ÷¡£
+ * è¿æ¥ ListView åŠå…¶åŒ¹é…ç»“æœé›†çš„é€‚é…å™¨ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1104
  */
@@ -41,19 +40,19 @@ public final class MatchAdapter extends BaseAdapter {//implements SectionIndexer
         mInflater = inflater;
         mItems = items;
     }
-    
-    /**
-     * ÉèÖÃÏÔÊ¾ÌõÄ¿ËùÓÃµÄ²¼¾Ö¡£
-     * @param layout	²¼¾ÖÀàĞÍ(LAYOUT´òÍ·µÄ³£Êı)
-     */
+
+	/**
+	 * è®¾ç½®æ˜¾ç¤ºæ¡ç›®æ‰€ç”¨çš„å¸ƒå±€ã€‚
+	 * @param layout	å¸ƒå±€ç±»å‹(LAYOUTæ‰“å¤´çš„å¸¸æ•°)
+	 */
     public void setLayout(int layout) {
     	mLayout = layout;
     }
-    
-    /**
-     * ÉèÖÃÏÔÊ¾ÎªÑ¡ÖĞÑùÊ½µÄÌõÄ¿µÄ±àºÅ¡£
-     * @param position	ÌõÄ¿±àºÅ
-     */
+
+	/**
+	 * è®¾ç½®æ˜¾ç¤ºä¸ºé€‰ä¸­æ ·å¼çš„æ¡ç›®çš„ç¼–å·ã€‚
+	 * @param position	æ¡ç›®ç¼–å·
+	 */
     public void setSelected(int position) {
     	mSelected = position;
     }

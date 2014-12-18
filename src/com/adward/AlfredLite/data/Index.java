@@ -20,7 +20,7 @@ import com.adward.AlfredLite.util.DigestUtil;
 import com.adward.AlfredLite.util.ThumbnailUtil;
 
 /**
- * °üº¬ÎÄ¼şË÷ÒıµÄÏà¹Ø²Ù×÷¡£
+ * åŒ…å«æ–‡ä»¶ç´¢å¼•çš„ç›¸å…³æ“ä½œã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1104
  */
@@ -49,30 +49,30 @@ public final class Index {
 
 	private static ThumbnailUtil thumbUtil;
 	private static DigestUtil digestUtil;
-	
+
 	private Index() { }
-	
+
 	/**
-	 * ·µ»ØÎÄ¼şË÷ÒıµÄµ±Ç°×´Ì¬¡£
-	 * @return ÒÔSTATUSÎªÇ°×ºµÄ×´Ì¬³£Êı
+	 * è¿”å›æ–‡ä»¶ç´¢å¼•çš„å½“å‰çŠ¶æ€ã€‚
+	 * @return ä»¥STATUSä¸ºå‰ç¼€çš„çŠ¶æ€å¸¸æ•°
 	 */
 	public static int getStatus() {
 		return status;
 	}
-	
+
 	/**
-	 * ¼ì²éË÷ÒıÊÇ·ñÒÑ¹ıÆÚ£¬²¢ÉèÖÃµ±Ç°×´Ì¬¡£
+	 * æ£€æŸ¥ç´¢å¼•æ˜¯å¦å·²è¿‡æœŸï¼Œå¹¶è®¾ç½®å½“å‰çŠ¶æ€ã€‚
 	 */
 	public static void checkObsolete() {
 		if (status == STATUS_READY && (IndexLoader.neededReload(data) || sPrefs.getBoolean("index_is_obsolete", true))) {
-    		sPrefs.edit().putBoolean("index_is_obsolete", true).commit();
-    		status = STATUS_OBSOLETE;
+			sPrefs.edit().putBoolean("index_is_obsolete", true).commit();
+			status = STATUS_OBSOLETE;
 		}
 	}
-	
+
 	/**
-	 * »ñÈ¡ÎÄ¼şË÷ÒıÖĞµÄÌõÄ¿×ÜÊı¡£
-	 * @return ÌõÄ¿×ÜÊı
+	 * è·å–æ–‡ä»¶ç´¢å¼•ä¸­çš„æ¡ç›®æ€»æ•°ã€‚
+	 * @return æ¡ç›®æ€»æ•°
 	 */
 	public static int length() {
 		if (data != null)
@@ -80,35 +80,35 @@ public final class Index {
 		else
 			return 0;
 	}
-	
+
 	/**
-	 * »ñµÃÎÄ¼şË÷ÒıµÄ½¨Á¢Ê±¼ä¡£
-	 * @return	ÎÄ¼şË÷ÒıµÄ½¨Á¢Ê±¼ä
+	 * è·å¾—æ–‡ä»¶ç´¢å¼•çš„å»ºç«‹æ—¶é—´ã€‚
+	 * @return	æ–‡ä»¶ç´¢å¼•çš„å»ºç«‹æ—¶é—´
 	 */
 	public static long reloadTime() {
 		return data.indexTime;
 	}
-	
+
 	/**
-	 * »ñµÃSD¿¨ÔÚ½¨Á¢Ë÷ÒıÊ±µÄÊ£Óà¿Õ¼ä¡£
-	 * @return	Ê£Óà¿Õ¼ä×Ö½ÚÊı
+	 * è·å¾—SDå¡åœ¨å»ºç«‹ç´¢å¼•æ—¶çš„å‰©ä½™ç©ºé—´ã€‚
+	 * @return	å‰©ä½™ç©ºé—´å­—èŠ‚æ•°
 	 */
 	public static long availableSpace() {
 		return data.availableSpace;
 	}
-	
+
 	/**
-	 * ÖĞ¶ÏËõÂÔÍ¼¼°ÕªÒªµÄ¶ÁÈ¡¹¤×÷¡£
+	 * ä¸­æ–­ç¼©ç•¥å›¾åŠæ‘˜è¦çš„è¯»å–å·¥ä½œã€‚
 	 */
 	public static void interrupt() {
 		thumbUtil.interrupt();
 		digestUtil.interrupt();
 	}
-	
+
 	/**
-	 * ³õÊ¼»¯ÎÄ¼şË÷ÒıÓë³ÌĞòµÄ¹ØÁª¡£Ö÷³ÌĞò¸Ä±äÊ×Ñ¡ÏîºóÓ¦ÔÙ´Îµ÷ÓÃ´Ëº¯Êı¡£
-	 * @param prefs		³ÌĞòµÄÊ×Ñ¡Ïî¶ÔÏó£¬´ÓÕâÀï»ñµÃË÷ÒıÉèÖÃ
-	 * @param handler	Ö÷Ïß³ÌµÄÏûÏ¢´¦ÀíÆ÷£¬Ë÷ÒıÏß³Ì²úÉúµÄÏà¹ØÏûÏ¢½«·¢Íù´ËÏûÏ¢´¦ÀíÆ÷
+	 * åˆå§‹åŒ–æ–‡ä»¶ç´¢å¼•ä¸ç¨‹åºçš„å…³è”ã€‚ä¸»ç¨‹åºæ”¹å˜é¦–é€‰é¡¹ååº”å†æ¬¡è°ƒç”¨æ­¤å‡½æ•°ã€‚
+	 * @param prefs		ç¨‹åºçš„é¦–é€‰é¡¹å¯¹è±¡ï¼Œä»è¿™é‡Œè·å¾—ç´¢å¼•è®¾ç½®
+	 * @param handler	ä¸»çº¿ç¨‹çš„æ¶ˆæ¯å¤„ç†å™¨ï¼Œç´¢å¼•çº¿ç¨‹äº§ç”Ÿçš„ç›¸å…³æ¶ˆæ¯å°†å‘å¾€æ­¤æ¶ˆæ¯å¤„ç†å™¨
 	 */
 	public static void init(Context context, Handler handler) {
 		sEventHandler = handler;
@@ -116,78 +116,78 @@ public final class Index {
 		thumbUtil = new ThumbnailUtil(context, handler);
 		digestUtil = new DigestUtil(context, handler);
 	}
-	
+
 	/**
-	 * Æô¶¯Ò»¸öĞÂÏß³ÌÒì²½ÖØÔØË÷Òı¡£µ±Ë÷ÒıÍê³ÉÊ±½«×Ô¶¯½øĞĞĞòÁĞ»¯²Ù×÷£¬²¢ÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ RELOAD_FINISHED ÏûÏ¢¡£
+	 * å¯åŠ¨ä¸€ä¸ªæ–°çº¿ç¨‹å¼‚æ­¥é‡è½½ç´¢å¼•ã€‚å½“ç´¢å¼•å®Œæˆæ—¶å°†è‡ªåŠ¨è¿›è¡Œåºåˆ—åŒ–æ“ä½œï¼Œå¹¶å‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ RELOAD_FINISHED æ¶ˆæ¯ã€‚
 	 */
 	public static synchronized void reloadEntriesAsync() {
 		status = STATUS_RELOADING;
 		new Thread(new Runnable() {
-        	public void run() {
-        		interrupt();
-    			data = null;
-        		IndexLoader loader = new IndexLoader(sPrefs);
-        		try {
-	        		IndexData newData = loader.reload();
+			public void run() {
+				interrupt();
+				data = null;
+				IndexLoader loader = new IndexLoader(sPrefs);
+				try {
+					IndexData newData = loader.reload();
 					IndexLoader.serialize(newData);
-    				data = newData;
-		    		sPrefs.edit().putBoolean("index_is_obsolete", false).commit();
-		    		status = STATUS_READY;
-		    		checkObsolete();
-	        		sendHandlerMessage(MESSAGE_RELOAD_SUCCESS, 0, 0, null);
-        		} catch (NoSDCardException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_NOSDCARD, 0, 0, null);
-        		} catch (SerializingException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_SERIALIZING_FAILED, 0, 0, null);
-        		}
-            }
-        }).start();
+					data = newData;
+					sPrefs.edit().putBoolean("index_is_obsolete", false).commit();
+					status = STATUS_READY;
+					checkObsolete();
+					sendHandlerMessage(MESSAGE_RELOAD_SUCCESS, 0, 0, null);
+				} catch (NoSDCardException e) {
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_NOSDCARD, 0, 0, null);
+				} catch (SerializingException e) {
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_SERIALIZING_FAILED, 0, 0, null);
+				}
+			}
+		}).start();
 	}
-	
+
 	/**
-	 * Æô¶¯ĞÂÏß³Ì£¬·´ĞòÁĞ»¯Î¨Ò»Ë÷Òı¶ÔÏó¡£µ±·´ĞòÁĞ»¯Íê³ÉÊ±»áÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ DESERIALIZED_SUCCESS »ò DESERIALIZED_FAILED ÏûÏ¢¡£
+	 * å¯åŠ¨æ–°çº¿ç¨‹ï¼Œååºåˆ—åŒ–å”¯ä¸€ç´¢å¼•å¯¹è±¡ã€‚å½“ååºåˆ—åŒ–å®Œæˆæ—¶ä¼šå‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ DESERIALIZED_SUCCESS æˆ– DESERIALIZED_FAILED æ¶ˆæ¯ã€‚
 	 */
 	public static synchronized void deserialization() {
 		status = STATUS_DESERIALIZING;
 		new Thread(new Runnable() {
-        	public void run() {
-        		interrupt();
-        		try {
-        			data = IndexLoader.deserialize();
-	        		status = STATUS_READY;
-	        		checkObsolete();
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_SUCCESS, 0, 0, null);    			
-        		} catch (NoSDCardException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_NOSDCARD, 0, 0, null);
-        		} catch (FileNotFoundException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
+			public void run() {
+				interrupt();
+				try {
+					data = IndexLoader.deserialize();
+					status = STATUS_READY;
+					checkObsolete();
+					sendHandlerMessage(MESSAGE_DESERIALIZING_SUCCESS, 0, 0, null);
+				} catch (NoSDCardException e) {
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_NOSDCARD, 0, 0, null);
+				} catch (FileNotFoundException e) {
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
 				} catch (DeserializingException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
 				} catch (IOException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
 				} catch (ClassNotFoundException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_DESERIALIZING_FAILED, 0, 0, null);
 				} catch (DifferentVersionException e) {
-        			status = STATUS_FAILED;
-	        		sendHandlerMessage(MESSAGE_DESERIALIZING_DIFFERENT_VERSION, 0, 0, null);
-				} 
-            }
-        }).start();
+					status = STATUS_FAILED;
+					sendHandlerMessage(MESSAGE_DESERIALIZING_DIFFERENT_VERSION, 0, 0, null);
+				}
+			}
+		}).start();
 	}
 
 	/**
-	 * ÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍÒ»ÌõÏûÏ¢¡£
-	 * @param what	ÏûÏ¢ÀàĞÍ
-	 * @param arg1	ÏûÏ¢²ÎÊı1 (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
-	 * @param arg2	ÏûÏ¢²ÎÊı2 (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
-	 * @param obj	ÏûÏ¢¸½¼Ó¶ÔÏó (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
+	 * å‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ä¸€æ¡æ¶ˆæ¯ã€‚
+	 * @param what	æ¶ˆæ¯ç±»å‹
+	 * @param arg1	æ¶ˆæ¯å‚æ•°1 (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
+	 * @param arg2	æ¶ˆæ¯å‚æ•°2 (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
+	 * @param obj	æ¶ˆæ¯é™„åŠ å¯¹è±¡ (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
 	 */
 	private static void sendHandlerMessage(int what, int arg1, int arg2, Object obj) {
 		if (null != sEventHandler) {
@@ -199,58 +199,58 @@ public final class Index {
 			sEventHandler.sendMessage(msg);
 		}
 	}
-		
+
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿µÄÎÄ¼şÃû¡£
-	 * @return	ÎÄ¼şÃû
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®çš„æ–‡ä»¶åã€‚
+	 * @return	æ–‡ä»¶å
 	 */
 	public static String getName(int i) { return data.name[i]; }
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şÃûµÄÊ××ÖÄ¸±íÊ¾¡£ÈôÃ»ÓĞÎªÊ××ÖÄ¸½¨Á¢Ë÷Òı£¬º¯Êı·µ»Ø¿Õ×Ö·û´®¡£
-	 * @return	ÎÄ¼şÃûµÄÊ××ÖÄ¸±íÊ¾
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶åçš„é¦–å­—æ¯è¡¨ç¤ºã€‚è‹¥æ²¡æœ‰ä¸ºé¦–å­—æ¯å»ºç«‹ç´¢å¼•ï¼Œå‡½æ•°è¿”å›ç©ºå­—ç¬¦ä¸²ã€‚
+	 * @return	æ–‡ä»¶åçš„é¦–å­—æ¯è¡¨ç¤º
 	 */
 	public static String getNameAlpha(int i) { return data.nameAlpha[i]; }//Unicode2Alpha.toAlpha(data.name[i]); }
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şËùÔÚµÄÂ·¾¶¡£
-	 * @return	Â·¾¶×Ö·û´®
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶æ‰€åœ¨çš„è·¯å¾„ã€‚
+	 * @return	è·¯å¾„å­—ç¬¦ä¸²
 	 */
 	public static String getPath(int i) { return data.path[i]; }
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şËùÔÚÂ·¾¶µÄÊ××ÖÄ¸±íÊ¾¡£ÈôÃ»ÓĞÎªÊ××ÖÄ¸½¨Á¢Ë÷Òı£¬º¯Êı·µ»Ø null¡£
-	 * @return	Â·¾¶×Ö·û´®µÄÊ××ÖÄ¸±íÊ¾
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶æ‰€åœ¨è·¯å¾„çš„é¦–å­—æ¯è¡¨ç¤ºã€‚è‹¥æ²¡æœ‰ä¸ºé¦–å­—æ¯å»ºç«‹ç´¢å¼•ï¼Œå‡½æ•°è¿”å› nullã€‚
+	 * @return	è·¯å¾„å­—ç¬¦ä¸²çš„é¦–å­—æ¯è¡¨ç¤º
 	 */
 	public static String getPathAlpha(int i) { return data.pathAlpha[i]; }//Unicode2Alpha.toAlpha(data.path[i]); }
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şµÄÉÏ´ÎĞŞ¸ÄÊ±¼ä£¬ÒÔ³¤ÕûĞÍ±íÊ¾µÄ×Ô 1970Äê1ÔÂ1ÈÕ ËãÆğµÄºÁÃëÖµ¡£
-	 * @return	ÎÄ¼şµÄÉÏ´ÎĞŞ¸ÄÊ±¼ä
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶çš„ä¸Šæ¬¡ä¿®æ”¹æ—¶é—´ï¼Œä»¥é•¿æ•´å‹è¡¨ç¤ºçš„è‡ª 1970å¹´1æœˆ1æ—¥ ç®—èµ·çš„æ¯«ç§’å€¼ã€‚
+	 * @return	æ–‡ä»¶çš„ä¸Šæ¬¡ä¿®æ”¹æ—¶é—´
 	 */
 	public static long getTime(int i) { return data.time[i]; }
 	/**
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şÒÔ×Ö½ÚÎªµ¥Î»±íÊ¾µÄ³¤¶È¡£
-	 * @return	ÎÄ¼ş³¤¶È
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶ä»¥å­—èŠ‚ä¸ºå•ä½è¡¨ç¤ºçš„é•¿åº¦ã€‚
+	 * @return	æ–‡ä»¶é•¿åº¦
 	 */
 	public static long getSize(int i) { return data.size[i]; }
-	
+
 	/***
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şµÄËõÂÔÍ¼¡£Èç¹ûËõÂÔÍ¼ÒÑ»º´æ£¬ÔòÖ±½Ó·µ»ØËõÂÔÍ¼£»·ñÔò·µ»Ø´ú±íÔØÈëÖĞµÄÍ¼Ïñ£¬²¢Æô¶¯Òì²½ÇëÇó»ñÈ¡ËõÂÔÍ¼¡£µ±Òì²½ÇëÇóÍê³ÉºóÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ UPDATE_THUMBNAIL ÏûÏ¢£¬Í¨ÖªËõÂÔÍ¼ÒÑ¸üĞÂ¡£
-	 * @return ÎÄ¼şËõÂÔÍ¼Î»Í¼
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶çš„ç¼©ç•¥å›¾ã€‚å¦‚æœç¼©ç•¥å›¾å·²ç¼“å­˜ï¼Œåˆ™ç›´æ¥è¿”å›ç¼©ç•¥å›¾ï¼›å¦åˆ™è¿”å›ä»£è¡¨è½½å…¥ä¸­çš„å›¾åƒï¼Œå¹¶å¯åŠ¨å¼‚æ­¥è¯·æ±‚è·å–ç¼©ç•¥å›¾ã€‚å½“å¼‚æ­¥è¯·æ±‚å®Œæˆåå‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ UPDATE_THUMBNAIL æ¶ˆæ¯ï¼Œé€šçŸ¥ç¼©ç•¥å›¾å·²æ›´æ–°ã€‚
+	 * @return æ–‡ä»¶ç¼©ç•¥å›¾ä½å›¾
 	 */
 	public static Bitmap getThumbnail(int i) {
 		return thumbUtil.get(data.path[i] + "/" + data.name[i]);
 	}
-	
+
 	/***
-	 * »ñÈ¡Ö¸¶¨Ë÷ÒıÌõÄ¿ÎÄ¼şµÄÕªÒªĞÅÏ¢¡£Èç¹ûÕªÒªĞÅÏ¢ÒÑ»º´æ£¬ÔòÖ±½Ó·µ»ØĞÅÏ¢£»·ñÔò·µ»Ø´ú±íÔØÈëÖĞµÄÎÄ×Ö£¬²¢Æô¶¯Òì²½ÇëÇó»ñÈ¡ÎÄ¼şÕªÒª¡£µ±Òì²½ÇëÇóÍê³ÉºóÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ RELOAD_UPDATE_DIGEST ÏûÏ¢£¬Í¨ÖªÎÄ¼şÕªÒªÒÑ¸üĞÂ¡£
-	 * @return ÎÄ¼şÕªÒª×Ö·û´®
+	 * è·å–æŒ‡å®šç´¢å¼•æ¡ç›®æ–‡ä»¶çš„æ‘˜è¦ä¿¡æ¯ã€‚å¦‚æœæ‘˜è¦ä¿¡æ¯å·²ç¼“å­˜ï¼Œåˆ™ç›´æ¥è¿”å›ä¿¡æ¯ï¼›å¦åˆ™è¿”å›ä»£è¡¨è½½å…¥ä¸­çš„æ–‡å­—ï¼Œå¹¶å¯åŠ¨å¼‚æ­¥è¯·æ±‚è·å–æ–‡ä»¶æ‘˜è¦ã€‚å½“å¼‚æ­¥è¯·æ±‚å®Œæˆåå‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ RELOAD_UPDATE_DIGEST æ¶ˆæ¯ï¼Œé€šçŸ¥æ–‡ä»¶æ‘˜è¦å·²æ›´æ–°ã€‚
+	 * @return æ–‡ä»¶æ‘˜è¦å­—ç¬¦ä¸²
 	 */
 	public static Spanned getDigest(int i) {
 		return digestUtil.get(data.path[i] + "/" + data.name[i]);
 	}
 
 	/**
-	 * ÎïÀíÉ¾³ıÖ¸¶¨Ë÷ÒıÌõÄ¿µÄÎÄ¼ş¡£
-	 * @param i	 Ë÷Òı±àºÅ
-	 * @return ÎÄ¼şÊÇ·ñ³É¹¦É¾³ı
+	 * ç‰©ç†åˆ é™¤æŒ‡å®šç´¢å¼•æ¡ç›®çš„æ–‡ä»¶ã€‚
+	 * @param i	 ç´¢å¼•ç¼–å·
+	 * @return æ–‡ä»¶æ˜¯å¦æˆåŠŸåˆ é™¤
 	 */
 	public static boolean delete(int i) {
 		File file = new File(data.path[i], data.name[i]);

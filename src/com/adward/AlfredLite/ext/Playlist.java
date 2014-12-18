@@ -1,8 +1,5 @@
 package com.adward.AlfredLite.ext;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -12,94 +9,97 @@ import android.provider.MediaStore;
 import android.provider.MediaStore.Audio;
 import android.util.Log;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
- * ÏµÍ³µÄÃ½Ìå´æ´¢²¥·ÅÁĞ±í¡£
+ * ç³»ç»Ÿçš„åª’ä½“å­˜å‚¨æ’­æ”¾åˆ—è¡¨ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1028
  */
 public final class Playlist {
-	
+
 	private final ContentResolver mResolver;
 	private final String[] mItems;
-	
+
 	/**
-	 * Ê¹ÓÃÍêÕûÂ·¾¶ÎÄ¼şÃûÊı×é¹¹ÔìÒ»¸ö²¥·ÅÁĞ±í¡£
+	 * ä½¿ç”¨å®Œæ•´è·¯å¾„æ–‡ä»¶åæ•°ç»„æ„é€ ä¸€ä¸ªæ’­æ”¾åˆ—è¡¨ã€‚
 	 */
 	public Playlist(ContentResolver resolver, String[] items) {
 		mResolver = resolver;
 		mItems = items;
 	}
-	
+
 	/**
-	 * ÓÃ¸ø¶¨Ãû³ÆÔÚÃ½Ìå¿âÖĞ´´½¨Ò»¸öĞÂµÄ²¥·ÅÁĞ±í£¬²¢³¢ÊÔ½«Êı×éÀïµÄÎÄ¼ş¼ÓÈëµ½ÁĞ±íÖĞ¡£Èô´æÔÚÍ¬Ãû²¥·ÅÁĞ±í£¬ÏÈÊÔÍ¼É¾³ıÔ­ÓĞÁĞ±í¡£
-	 * @param name	ĞÂ²¥·ÅÁĞ±íÃû³Æ
-	 * @return ³É¹¦Ìí¼ÓµÄÌõÄ¿Êı
+	 * ç”¨ç»™å®šåç§°åœ¨åª’ä½“åº“ä¸­åˆ›å»ºä¸€ä¸ªæ–°çš„æ’­æ”¾åˆ—è¡¨ï¼Œå¹¶å°è¯•å°†æ•°ç»„é‡Œçš„æ–‡ä»¶åŠ å…¥åˆ°åˆ—è¡¨ä¸­ã€‚è‹¥å­˜åœ¨åŒåæ’­æ”¾åˆ—è¡¨ï¼Œå…ˆè¯•å›¾åˆ é™¤åŸæœ‰åˆ—è¡¨ã€‚
+	 * @param name	æ–°æ’­æ”¾åˆ—è¡¨åç§°
+	 * @return æˆåŠŸæ·»åŠ çš„æ¡ç›®æ•°
 	 */
 	public int createNew(String name) {
 		long[] ids = toMediaId();
 		if (ids.length == 0) return 0;
 		removeIfExist(name);
-        ContentValues[] values = new ContentValues[ids.length];
-        Uri uri = createPlaylist(name);
-        for (int i = 0; i < ids.length; i++) {
-            values[i] = new ContentValues();
-            values[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Integer.valueOf(i));
-            values[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, ids[i]);
-        }		
-        return mResolver.bulkInsert(uri, values);
+		ContentValues[] values = new ContentValues[ids.length];
+		Uri uri = createPlaylist(name);
+		for (int i = 0; i < ids.length; i++) {
+			values[i] = new ContentValues();
+			values[i].put(MediaStore.Audio.Playlists.Members.PLAY_ORDER, Integer.valueOf(i));
+			values[i].put(MediaStore.Audio.Playlists.Members.AUDIO_ID, ids[i]);
+		}
+		return mResolver.bulkInsert(uri, values);
 	}
-	
+
 	/**
-	 * ÔÚÃ½Ìå¿âÖĞ²éÑ¯Ö¸¶¨µÄ²¥·ÅÁĞ±í£¬Èô´æÔÚÔò½«ÆäÉ¾³ı¡£
-	 * @param name	²¥·ÅÁĞ±íÃû³Æ
+	 * åœ¨åª’ä½“åº“ä¸­æŸ¥è¯¢æŒ‡å®šçš„æ’­æ”¾åˆ—è¡¨ï¼Œè‹¥å­˜åœ¨åˆ™å°†å…¶åˆ é™¤ã€‚
+	 * @param name	æ’­æ”¾åˆ—è¡¨åç§°
 	 */
 	public void removeIfExist(String name) {
-        String whereclause = MediaStore.Audio.Playlists.NAME + " == '" + name.replace("'", "''") + "'";
-        Cursor cursor = mResolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-        		new String[] { MediaStore.Audio.Playlists._ID }, whereclause, null, MediaStore.Audio.Playlists.NAME);
-        if (cursor != null && cursor.getCount() > 0) {
-        	cursor.moveToFirst();
-            long id = cursor.getLong(0);
-            mResolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, MediaStore.Audio.Playlists._ID + " == " + id, null);
-        }
-        if (cursor != null) cursor.close();
+		String whereclause = MediaStore.Audio.Playlists.NAME + " == '" + name.replace("'", "''") + "'";
+		Cursor cursor = mResolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+				new String[] { MediaStore.Audio.Playlists._ID }, whereclause, null, MediaStore.Audio.Playlists.NAME);
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			long id = cursor.getLong(0);
+			mResolver.delete(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, MediaStore.Audio.Playlists._ID + " == " + id, null);
+		}
+		if (cursor != null) cursor.close();
 	}
-	
+
 	public PlaylistPair[] getPlaylists() {
 		List<PlaylistPair> list = new ArrayList<PlaylistPair>();
-        String[] cols = new String[] {
-                MediaStore.Audio.Playlists._ID,
-                MediaStore.Audio.Playlists.NAME
-        };
-        String whereclause = MediaStore.Audio.Playlists.NAME + " != ''";
-        Cursor cursor = mResolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
-            cols, whereclause, null,
-            MediaStore.Audio.Playlists.NAME);
-        if (cursor != null && cursor.getCount() > 0) {
-        	cursor.moveToFirst();
-            while (! cursor.isAfterLast()) {
-                list.add(new PlaylistPair(cursor.getInt(0), cursor.getString(1)));
-                cursor.moveToNext();
-            }
-        }
-        if (cursor != null) cursor.close();
-        return (PlaylistPair[]) list.toArray();
+		String[] cols = new String[] {
+				MediaStore.Audio.Playlists._ID,
+				MediaStore.Audio.Playlists.NAME
+		};
+		String whereclause = MediaStore.Audio.Playlists.NAME + " != ''";
+		Cursor cursor = mResolver.query(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI,
+				cols, whereclause, null,
+				MediaStore.Audio.Playlists.NAME);
+		if (cursor != null && cursor.getCount() > 0) {
+			cursor.moveToFirst();
+			while (! cursor.isAfterLast()) {
+				list.add(new PlaylistPair(cursor.getInt(0), cursor.getString(1)));
+				cursor.moveToNext();
+			}
+		}
+		if (cursor != null) cursor.close();
+		return (PlaylistPair[]) list.toArray();
 	}
-	
+
 	/**
-	 * ÒÔ¸ø¶¨Ãû×Ö´´½¨Ò»¸öĞÂµÄ²¥·ÅÁĞ±í£¬²¢·µ»ØĞÂ²¥·ÅÁĞ±íµÄ URI¡£
-	 * @param name	ĞÂ²¥·ÅÁĞ±íµÄÃû×Ö
-	 * @return ĞÂ²¥·ÅÁĞ±íµÄ URI
+	 * ä»¥ç»™å®šåå­—åˆ›å»ºä¸€ä¸ªæ–°çš„æ’­æ”¾åˆ—è¡¨ï¼Œå¹¶è¿”å›æ–°æ’­æ”¾åˆ—è¡¨çš„ URIã€‚
+	 * @param name	æ–°æ’­æ”¾åˆ—è¡¨çš„åå­—
+	 * @return æ–°æ’­æ”¾åˆ—è¡¨çš„ URI
 	 */
 	private Uri createPlaylist(String name) {
 		ContentValues values = new ContentValues();
 		values.put(MediaStore.Audio.PlaylistsColumns.NAME, name);
 		return mResolver.insert(MediaStore.Audio.Playlists.EXTERNAL_CONTENT_URI, values);
 	}
-	
+
 	/**
-	 * ²éÑ¯Ã½ÌåÊı¾İ¿â£¬°´Ë³Ğò°ÑÃ¿Ò»¸öÎÄ¼ş×ª»»³ÉÃ½ÌåÊı¾İ¿âÖĞµÄ ID ±íÊ¾¡£
-	 * @return ÕûĞÍ ID Êı×é
+	 * æŸ¥è¯¢åª’ä½“æ•°æ®åº“ï¼ŒæŒ‰é¡ºåºæŠŠæ¯ä¸€ä¸ªæ–‡ä»¶è½¬æ¢æˆåª’ä½“æ•°æ®åº“ä¸­çš„ ID è¡¨ç¤ºã€‚
+	 * @return æ•´å‹ ID æ•°ç»„
 	 */
 	private long[] toMediaId() {
 		long[] list = new long[mItems.length];
@@ -116,7 +116,7 @@ public final class Playlist {
 		try {
 			Cursor cursor = mResolver.query(
 					MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-					new String[] { Audio.AudioColumns._ID, MediaStore.Audio.AudioColumns.DATA }, 
+					new String[] { Audio.AudioColumns._ID, MediaStore.Audio.AudioColumns.DATA },
 					where, null, null);
 			if (cursor == null) return new long[0];
 			for(cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
@@ -134,11 +134,11 @@ public final class Playlist {
 		}
 		return shrinkLongArray(list);
 	}
-	
+
 	/**
-	 * Ñ¹ËõÒ»¸ö long ĞÍÊı×é£¬±£ÁôÆä·Ç¸ºÔªËØ¡£
-	 * @param source	ÊäÈëÊı×é
-	 * @return ½öº¬·Ç¸ºÔªËØµÄÊı×é
+	 * å‹ç¼©ä¸€ä¸ª long å‹æ•°ç»„ï¼Œä¿ç•™å…¶éè´Ÿå…ƒç´ ã€‚
+	 * @param source	è¾“å…¥æ•°ç»„
+	 * @return ä»…å«éè´Ÿå…ƒç´ çš„æ•°ç»„
 	 */
 	public long[] shrinkLongArray(long[] source) {
 		int count = 0;
@@ -150,16 +150,16 @@ public final class Playlist {
 			if (source[i] >= 0) result[count++] = source[i];
 		return result;
 	}
-	
+
 	public class PlaylistPair {
 		private long mId;
 		private String mName;
-		
+
 		public PlaylistPair(int id, String name) {
 			mId = id;
 			mName = name;
 		}
-		
+
 		public long getId() { return mId; }
 		public String getName() { return mName; }
 	}

@@ -157,7 +157,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
 
 	private void initUtils() {
-		initDatabase();
+		//initDatabase();
         System.out.println("initUtils");
        	Intent intent = new Intent();
        	intent.setClass(SearchActivity.this, SearchActivity.class);
@@ -885,7 +885,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		mNotificationManager.notify(0, mReloadNotification);
 		Matcher.stopAsyncMatch();
         Index.reloadEntriesAsync();
-        reloadDatabase();
+        //reloadDatabase();
 	}
 	
 	private void enterPickMode(int type, boolean lock) {
@@ -1165,7 +1165,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	public void initDatabase(){
 		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
 		System.out.println("~haha~~~");
-		db.execSQL("drop table data");
+		db.execSQL("drop table if exists data");
 		db.execSQL("create table data ( " +
 				  "contactName varchar(20)," +
 				  "contactPhoneNum varchar(20)" +
