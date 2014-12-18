@@ -5,60 +5,60 @@ import android.content.Intent;
 import android.content.Intent.ShortcutIconResource;
 
 /**
- * °üº¬Éú³É×ÀÃæ¿ì½İ·½Ê½µÄÏà¹Ø¹¤¾ß
+ * åŒ…å«ç”Ÿæˆæ¡Œé¢å¿«æ·æ–¹å¼çš„ç›¸å…³å·¥å…·
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1104
  */
 public final class ShortcutHelper {
-	
+
 	private static final String ACTION_INSTALL_SHORTCUT = "com.android.launcher.action.INSTALL_SHORTCUT";
 	private static final String EXTRA_SHORTCUT_DUPLICATE = "duplicate";
-	
+
 	private Context mContext;
 	private String mName;
 	private Intent mIntent;
 	private ShortcutIconResource mIconResource;
-	
+
 	/**
-	 * ½«¸ø¶¨µÄ Intent °ü×°ÎªÒ»¸ö¿ì½İ·½Ê½¸¨ÖúÀà¡£
-	 * @param context	ÉÏÏÂÎÄ¶ÔÏó
-	 * @param intent	Ä¿±ê¿ì½İ·½Ê½ Intent ¶ÔÏó
+	 * å°†ç»™å®šçš„ Intent åŒ…è£…ä¸ºä¸€ä¸ªå¿«æ·æ–¹å¼è¾…åŠ©ç±»ã€‚
+	 * @param context	ä¸Šä¸‹æ–‡å¯¹è±¡
+	 * @param intent	ç›®æ ‡å¿«æ·æ–¹å¼ Intent å¯¹è±¡
 	 */
 	public ShortcutHelper(Context context, Intent intent) {
 		mContext = context;
 		mIntent = intent;
 	}
-	
+
 	/**
-	 * ÉèÖÃ¿ì½İ·½Ê½ÏÔÊ¾µÄÃû³Æ¡£
-	 * @param name	ÏÔÊ¾Ãû³Æ×Ö·û´®
-	 * @return µ±Ç°°ü×°¶ÔÏó
+	 * è®¾ç½®å¿«æ·æ–¹å¼æ˜¾ç¤ºçš„åç§°ã€‚
+	 * @param name	æ˜¾ç¤ºåç§°å­—ç¬¦ä¸²
+	 * @return å½“å‰åŒ…è£…å¯¹è±¡
 	 */
 	public ShortcutHelper setName(String name) {
 		mName = name;
 		return this;
 	}
-	
+
 	/**
-	 * ÉèÖÃ¿ì½İ·½Ê½ÏÔÊ¾µÄÍ¼±ê×ÊÔ´¡£
-	 * @param iconResource	ÒªÏÔÊ¾µÄÍ¼±ê
-	 * @return	µ±Ç°°ü×°¶ÔÏó
+	 * è®¾ç½®å¿«æ·æ–¹å¼æ˜¾ç¤ºçš„å›¾æ ‡èµ„æºã€‚
+	 * @param iconResource	è¦æ˜¾ç¤ºçš„å›¾æ ‡
+	 * @return	å½“å‰åŒ…è£…å¯¹è±¡
 	 */
 	public ShortcutHelper setIconResource(ShortcutIconResource iconResource) {
 		mIconResource = iconResource;
 		return this;
 	}
-	
+
 	/**
-	 * Éú³É¿ì½İ·½Ê½µ½×ÀÃæÉÏ¡£
-	 * @param duplicate		ÊÇ·ñ¿ÉÒÔÓĞ¶à¸ö¿ì½İ·½Ê½µÄ¸±±¾
+	 * ç”Ÿæˆå¿«æ·æ–¹å¼åˆ°æ¡Œé¢ä¸Šã€‚
+	 * @param duplicate		æ˜¯å¦å¯ä»¥æœ‰å¤šä¸ªå¿«æ·æ–¹å¼çš„å‰¯æœ¬
 	 */
 	public void install(boolean duplicate) {
-		Intent installIntent = new Intent(ACTION_INSTALL_SHORTCUT);    
-	    installIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mName);    
-	    installIntent.putExtra(EXTRA_SHORTCUT_DUPLICATE, duplicate);
-	    installIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, mIntent);    
-	    installIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, mIconResource);
-	    mContext.sendBroadcast(installIntent);  	
+		Intent installIntent = new Intent(ACTION_INSTALL_SHORTCUT);
+		installIntent.putExtra(Intent.EXTRA_SHORTCUT_NAME, mName);
+		installIntent.putExtra(EXTRA_SHORTCUT_DUPLICATE, duplicate);
+		installIntent.putExtra(Intent.EXTRA_SHORTCUT_INTENT, mIntent);
+		installIntent.putExtra(Intent.EXTRA_SHORTCUT_ICON_RESOURCE, mIconResource);
+		mContext.sendBroadcast(installIntent);
 	}
 }

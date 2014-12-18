@@ -1,9 +1,5 @@
 package com.adward.AlfredLite.util;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -17,10 +13,13 @@ import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.util.Log;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
- * ËõÂÔÍ¼»ñÈ¡¹¤¾ßÀà¡£ÄÚ²¿°üº¬ËõÂÔÍ¼ÈíÒıÓÃ»º´æÆ÷£¬µ±ÄÚ´æ²»×ãÊ±ÄÜ×Ô¶¯ÊÍ·Å»º´æÒÔ±£Ö¤ÏµÍ³Õı³£ÔËĞĞ¡£ÄÚ½¨ËõÂÔÍ¼³ß´çÎª 96x96¡£
+ * ç¼©ç•¥å›¾è·å–å·¥å…·ç±»ã€‚å†…éƒ¨åŒ…å«ç¼©ç•¥å›¾è½¯å¼•ç”¨ç¼“å­˜å™¨ï¼Œå½“å†…å­˜ä¸è¶³æ—¶èƒ½è‡ªåŠ¨é‡Šæ”¾ç¼“å­˜ä»¥ä¿è¯ç³»ç»Ÿæ­£å¸¸è¿è¡Œã€‚å†…å»ºç¼©ç•¥å›¾å°ºå¯¸ä¸º 96x96ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1029
  */
@@ -31,10 +30,10 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 	private Context mContext;
 	private SharedPreferences mPrefs;
 	private boolean isDisplayThumbnail;
-	
+
 	/**
-	 * ³õÊ¼»¯ËõÂÔÍ¼¹¤¾ßÊµÀı¡£
-	 * @param context	³ÌĞòÉÏÏÂÎÄ(½¨ÒéÔÚ Activity ¼°ÆäÅÉÉúÀàÖĞÓÃ getApplicationContext() »ñµÃ)
+	 * åˆå§‹åŒ–ç¼©ç•¥å›¾å·¥å…·å®ä¾‹ã€‚
+	 * @param context	ç¨‹åºä¸Šä¸‹æ–‡(å»ºè®®åœ¨ Activity åŠå…¶æ´¾ç”Ÿç±»ä¸­ç”¨ getApplicationContext() è·å¾—)
 	 */
 	public ThumbnailUtil(Context context, Handler handler) {
 		super(handler);
@@ -42,9 +41,9 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		mPrefs = PreferenceManager.getDefaultSharedPreferences(context);
 		refresh();
 	}
-	
+
 	/**
-	 * Ë¢ĞÂËõÂÔÍ¼»ñÈ¡ÉèÖÃ¡£
+	 * åˆ·æ–°ç¼©ç•¥å›¾è·å–è®¾ç½®ã€‚
 	 */
 	public void refresh() {
 		isDisplayThumbnail = mPrefs.getBoolean("display_thumbnail", true);
@@ -54,12 +53,12 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 	Bitmap request(String key) {
 		return fromFile(key);
 	}
-	
+
 	@Override
 	int getMaxQueueLength() {
 		return 10;
 	}
-	
+
 	@Override
 	Bitmap getDefault() {
 		if (null == mLoadingThumbnail) {
@@ -73,11 +72,11 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		}
 		return mLoadingThumbnail;
 	}
-	
+
 	/**
-	 * ¸ù¾İÍêÕûµÄÂ·¾¶ÎÄ¼şÃû»ñÈ¡Æä¶ÔÓ¦µÄËõÂÔÍ¼¡£¶ÔÓÚÍ¼Æ¬ÎÄ¼ş£¬³¢ÊÔ¼ÓÔØ¸ÃÍ¼Æ¬²¢×ª»»ÎªËõÂÔÍ¼£»¶ÔÓÚÒôÀÖÎÄ¼ş£¬³¢ÊÔ¼ÓÔØ¶ÔÓ¦·âÃæÍ¼Æ¬£»ÆäËûÀàĞÍ³¢ÊÔ¼ÓÔØ×ÊÔ´ÎÄ¼şÀïÓëÀ©Õ¹Ãû¶ÔÓ¦µÄÍ¼±ê×÷ÎªËõÂÔÍ¼¡£Èç¹ûÎ´ÕÒµ½¶ÔÓ¦Í¼±ê£¬Ôò·µ»ØÄ¬ÈÏÍ¼±ê¡£
-	 * @param filename	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return ËõÂÔÍ¼Î»Í¼
+	 * æ ¹æ®å®Œæ•´çš„è·¯å¾„æ–‡ä»¶åè·å–å…¶å¯¹åº”çš„ç¼©ç•¥å›¾ã€‚å¯¹äºå›¾ç‰‡æ–‡ä»¶ï¼Œå°è¯•åŠ è½½è¯¥å›¾ç‰‡å¹¶è½¬æ¢ä¸ºç¼©ç•¥å›¾ï¼›å¯¹äºéŸ³ä¹æ–‡ä»¶ï¼Œå°è¯•åŠ è½½å¯¹åº”å°é¢å›¾ç‰‡ï¼›å…¶ä»–ç±»å‹å°è¯•åŠ è½½èµ„æºæ–‡ä»¶é‡Œä¸æ‰©å±•åå¯¹åº”çš„å›¾æ ‡ä½œä¸ºç¼©ç•¥å›¾ã€‚å¦‚æœæœªæ‰¾åˆ°å¯¹åº”å›¾æ ‡ï¼Œåˆ™è¿”å›é»˜è®¤å›¾æ ‡ã€‚
+	 * @param filename	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return ç¼©ç•¥å›¾ä½å›¾
 	 */
 	private Bitmap fromFile(String filename) {
 		Bitmap thumbnail = null;
@@ -97,26 +96,26 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		}
 		return (null == thumbnail) ? fromExt(filename) : thumbnail;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨Í¼Æ¬ÎÄ¼şÖĞ¼ÓÔØÍ¼Æ¬£¬²¢×ª»»ÎªËõÂÔÍ¼¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 ËõÂÔÍ¼Î»Í¼
+	 * ä»ç»™å®šå›¾ç‰‡æ–‡ä»¶ä¸­åŠ è½½å›¾ç‰‡ï¼Œå¹¶è½¬æ¢ä¸ºç¼©ç•¥å›¾ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 ç¼©ç•¥å›¾ä½å›¾
 	 */
 	private Bitmap loadFromImage(String path) {
 		Bitmap thumbnail = null;
 		try{
 			Options options = new Options();
-			// ¶ÁÈ¡±ß½çÒÔÈ·¶¨Í¼Ïñ´óĞ¡
+			// è¯»å–è¾¹ç•Œä»¥ç¡®å®šå›¾åƒå¤§å°
 			options.inSampleSize = 1;
-	        options.inJustDecodeBounds = true;
+			options.inJustDecodeBounds = true;
 			BitmapFactory.decodeFile(path, options);
-	        if (options.mCancel || options.outWidth == -1 || options.outHeight == -1) return fromExt(path);
-	        // ÉèÖÃ²ÉÑùÂÊ²¢ÕæÕı¶ÁÈ¡Í¼Ïñ
-	        setSampleSize(options);
-	        options.inDither = true;
-	        options.inJustDecodeBounds = false;
-	        //options.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			if (options.mCancel || options.outWidth == -1 || options.outHeight == -1) return fromExt(path);
+			// è®¾ç½®é‡‡æ ·ç‡å¹¶çœŸæ­£è¯»å–å›¾åƒ
+			setSampleSize(options);
+			options.inDither = true;
+			options.inJustDecodeBounds = false;
+			//options.inPreferredConfig = Bitmap.Config.ARGB_8888;
 			Bitmap bitmap = BitmapFactory.decodeFile(path, options);
 			if (null != bitmap) {
 				thumbnail = scaleBitmap(bitmap);
@@ -129,11 +128,11 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨ÒôÆµÎÄ¼şËùÔÚÎÄ¼ş¼ĞÖĞ¼ÓÔØ·âÃæÍ¼Æ¬£¬²¢×ª»»ÎªËõÂÔÍ¼¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 ËõÂÔÍ¼Î»Í¼
+	 * ä»ç»™å®šéŸ³é¢‘æ–‡ä»¶æ‰€åœ¨æ–‡ä»¶å¤¹ä¸­åŠ è½½å°é¢å›¾ç‰‡ï¼Œå¹¶è½¬æ¢ä¸ºç¼©ç•¥å›¾ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 ç¼©ç•¥å›¾ä½å›¾
 	 */
 	private Bitmap loadFromAudio(String path) {
 		String folder = path.substring(0, path.lastIndexOf("/"));
@@ -146,59 +145,59 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		}
 		return null;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨ÊÓÆµÎÄ¼şÖĞ¶ÁÈ¡Ö¡£¬²¢×ª»»ÎªËõÂÔÍ¼¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 ËõÂÔÍ¼Î»Í¼
+	 * ä»ç»™å®šè§†é¢‘æ–‡ä»¶ä¸­è¯»å–å¸§ï¼Œå¹¶è½¬æ¢ä¸ºç¼©ç•¥å›¾ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 ç¼©ç•¥å›¾ä½å›¾
 	 */
 	private Bitmap loadFromVideo(String path) {
 		Bitmap thumbnail = null;
-        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
-        try {
-            retriever.setMode(MediaMetadataRetriever.MODE_CAPTURE_FRAME_ONLY);
-            retriever.setDataSource(path);
-            Bitmap bitmap = retriever.captureFrame();
-            thumbnail = scaleBitmap(bitmap);
+		MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+		try {
+			//retriever.setMode(MediaMetadataRetriever.MODE_CAPTURE_FRAME_ONLY);
+			retriever.setDataSource(path);
+			Bitmap bitmap = retriever.getFrameAtTime();
+			thumbnail = scaleBitmap(bitmap);
 			bitmap.recycle();
 			bitmap = null;
-        } catch (Exception ex) {
-            ex.printStackTrace();
-        } catch (NoSuchMethodError err) {
-        	err.printStackTrace();
-        } finally {
-            try {
-                retriever.release();
-            } catch (RuntimeException ex) {
-                ex.printStackTrace();
-            }
-        }
-		return thumbnail;
-    }
-	
-	/**
-	 * ´Ó¸ø¶¨Ó¦ÓÃ³ÌĞò°üÎÄ¼şÖĞ¼ÓÔØËõÂÔÍ¼¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 ËõÂÔÍ¼Î»Í¼
-	 */
-	private Bitmap loadFromApk(String path) {
-		Bitmap thumbnail = null;
-		PackageManager pm = mContext.getPackageManager();      
-        PackageInfo info = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);      
-        if(info != null){
-            ApplicationInfo appInfo = info.applicationInfo;
-            appInfo.sourceDir = path;
-            appInfo.publicSourceDir = path;
-            Drawable drawable = pm.getApplicationIcon(appInfo);
-            thumbnail = scaleBitmap(((BitmapDrawable)drawable).getBitmap());
-        }
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		} catch (NoSuchMethodError err) {
+			err.printStackTrace();
+		} finally {
+			try {
+				retriever.release();
+			} catch (RuntimeException ex) {
+				ex.printStackTrace();
+			}
+		}
 		return thumbnail;
 	}
 
 	/**
-	 * °´ÕÕÀ©Õ¹Ãû¼ÓÔØ×ÊÔ´ÎÄ¼şÀïÓëÀ©Õ¹Ãû¶ÔÓ¦µÄÍ¼±ê×÷ÎªËõÂÔÍ¼¡£Èç¹ûÎ´ÕÒµ½¶ÔÓ¦Í¼±ê£¬Ôò·µ»ØÄ¬ÈÏÍ¼±ê¡£
-	 * @param filename	ÎÄ¼şÃû
-	 * @return	 ËõÂÔÍ¼Î»Í¼
+	 * ä»ç»™å®šåº”ç”¨ç¨‹åºåŒ…æ–‡ä»¶ä¸­åŠ è½½ç¼©ç•¥å›¾ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 ç¼©ç•¥å›¾ä½å›¾
+	 */
+	private Bitmap loadFromApk(String path) {
+		Bitmap thumbnail = null;
+		PackageManager pm = mContext.getPackageManager();
+		PackageInfo info = pm.getPackageArchiveInfo(path, PackageManager.GET_ACTIVITIES);
+		if(info != null){
+			ApplicationInfo appInfo = info.applicationInfo;
+			appInfo.sourceDir = path;
+			appInfo.publicSourceDir = path;
+			Drawable drawable = pm.getApplicationIcon(appInfo);
+			thumbnail = scaleBitmap(((BitmapDrawable)drawable).getBitmap());
+		}
+		return thumbnail;
+	}
+
+	/**
+	 * æŒ‰ç…§æ‰©å±•ååŠ è½½èµ„æºæ–‡ä»¶é‡Œä¸æ‰©å±•åå¯¹åº”çš„å›¾æ ‡ä½œä¸ºç¼©ç•¥å›¾ã€‚å¦‚æœæœªæ‰¾åˆ°å¯¹åº”å›¾æ ‡ï¼Œåˆ™è¿”å›é»˜è®¤å›¾æ ‡ã€‚
+	 * @param filename	æ–‡ä»¶å
+	 * @return	 ç¼©ç•¥å›¾ä½å›¾
 	 */
 	private Bitmap fromExt(String filename) {
 		String ext = FileInfo.extension(filename);
@@ -228,10 +227,10 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		}
 		return putCache(ext, thumbnail);
 	}
-	
+
 	/**
-	 * »ñÈ¡Ä¬ÈÏµÄÍ¼±ê×÷ÎªËõÂÔÍ¼¡£
-	 * @return	ËõÂÔÍ¼Î»Í¼
+	 * è·å–é»˜è®¤çš„å›¾æ ‡ä½œä¸ºç¼©ç•¥å›¾ã€‚
+	 * @return	ç¼©ç•¥å›¾ä½å›¾
 	 */
 	public Bitmap getUndefined() {
 		if (null == mDefaultThumbnail) {
@@ -253,9 +252,9 @@ public class ThumbnailUtil extends SoftCache<String, Bitmap> {
 		while (sample <= minSample) sample <<= 1;
 		options.inSampleSize = sample;
 	}
-	
+
 	private static Bitmap scaleBitmap(Bitmap source) {
 		int maxSize = source.getWidth() > source.getHeight() ? source.getWidth() : source.getHeight();
-        return Bitmap.createScaledBitmap(source, source.getWidth() * 96 / maxSize, source.getHeight() * 96 / maxSize, true);
+		return Bitmap.createScaledBitmap(source, source.getWidth() * 96 / maxSize, source.getHeight() * 96 / maxSize, true);
 	}
 }

@@ -10,20 +10,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 /**
- * Ìá¹©ÓëÎÄ¼şĞÅÏ¢Ïà¹ØµÄ¾²Ì¬¹¤¾ßº¯Êı¡£
+ * æä¾›ä¸æ–‡ä»¶ä¿¡æ¯ç›¸å…³çš„é™æ€å·¥å…·å‡½æ•°ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1025
  */
 public class FileInfo {
 
 	private static Context sContext;
-	
+
 	private FileInfo() { }
-	
+
 	/**
-	 * »ñÈ¡¸ø¶¨ÎÄ¼şÃûµÄÖ÷ÎÄ¼şÃûÃû²¿·Ö
-	 * @param filename	Ô´ÎÄ¼şÃû
-	 * @return Ô´ÎÄ¼şÃûµÄÖ÷ÎÄ¼şÃûÃû²¿·Ö(²»º¬Â·¾¶¼°À©Õ¹Ãû)
+	 * è·å–ç»™å®šæ–‡ä»¶åçš„ä¸»æ–‡ä»¶ååéƒ¨åˆ†
+	 * @param filename	æºæ–‡ä»¶å
+	 * @return æºæ–‡ä»¶åçš„ä¸»æ–‡ä»¶ååéƒ¨åˆ†(ä¸å«è·¯å¾„åŠæ‰©å±•å)
 	 */
 	public static String mainName(String filename) {
 		int start = filename.lastIndexOf("/");
@@ -35,11 +35,11 @@ public class FileInfo {
 			return "";
 		}
 	}
-	
+
 	/**
-	 * »ñÈ¡¸ø¶¨ÎÄ¼şÃûµÄÀ©Õ¹Ãû²¿·Ö
-	 * @param filename	Ô´ÎÄ¼şÃû
-	 * @return Ô´ÎÄ¼şÃûµÄÀ©Õ¹Ãû²¿·Ö(²»º¬Ğ¡Êıµã)
+	 * è·å–ç»™å®šæ–‡ä»¶åçš„æ‰©å±•åéƒ¨åˆ†
+	 * @param filename	æºæ–‡ä»¶å
+	 * @return æºæ–‡ä»¶åçš„æ‰©å±•åéƒ¨åˆ†(ä¸å«å°æ•°ç‚¹)
 	 */
 	public static String extension(String filename) {
 		int start = filename.lastIndexOf("/");
@@ -47,22 +47,22 @@ public class FileInfo {
 		if (stop < start || stop >= filename.length() - 1) return "";
 		else return filename.substring(stop + 1, filename.length());
 	}
-	
+
 	/**
-	 * »ñÈ¡¸ø¶¨ÎÄ¼şÃûµÄ MIME ÀàĞÍ
-	 * @param filename	Ô´ÎÄ¼şÃû
-	 * @return Ô´ÎÄ¼şÃûµÄ MIME ÀàĞÍ
+	 * è·å–ç»™å®šæ–‡ä»¶åçš„ MIME ç±»å‹
+	 * @param filename	æºæ–‡ä»¶å
+	 * @return æºæ–‡ä»¶åçš„ MIME ç±»å‹
 	 */
 	public static String mimeType(String filename) {
 		String ext = extension(filename);
 		String mime = MimeTypeMap.getSingleton().getMimeTypeFromExtension(ext);
 		return (mime == null) ? "*.*" : mime;
 	}
-	
+
 	/**
-	 * »ñÈ¡ÎÄ¼ş³¤¶ÈµÄÖÇÄÜ¿É¶Á×Ö·û´®ĞÎÊ½¡£
-	 * @param size	ÎÄ¼ş×Ö½Ú³¤¶È
-	 * @return	ÎÄ¼ş³¤¶ÈµÄ×Ö·û´®±íÊ¾
+	 * è·å–æ–‡ä»¶é•¿åº¦çš„æ™ºèƒ½å¯è¯»å­—ç¬¦ä¸²å½¢å¼ã€‚
+	 * @param size	æ–‡ä»¶å­—èŠ‚é•¿åº¦
+	 * @return	æ–‡ä»¶é•¿åº¦çš„å­—ç¬¦ä¸²è¡¨ç¤º
 	 */
 	public static String sizeString(long size) {
 		if (size < 1024)
@@ -76,12 +76,12 @@ public class FileInfo {
 		else
 			return String.format("%.2f EB", (double)size / (1024L * 1024 * 1024 * 1024));
 	}
-	
+
 	/**
-	 * ´ÓÎÄ¼ş³¤¶ÈµÄ×Ö·û´®ĞÎÊ½×ª»»Îª×Ö½ÚÊı±íÊ¾¡£
-	 * @param sizeString	ÎÄ¼ş³¤¶ÈµÄ×Ö·û´®±íÊ¾
-	 * @return	ÎÄ¼ş×Ö½Ú³¤¶È
-	 * @throws ParseException	¸ø¶¨×Ö·û´®²»ÊÇÖ§³ÖµÄĞÎÊ½£¬½âÎöÊ§°Ü
+	 * ä»æ–‡ä»¶é•¿åº¦çš„å­—ç¬¦ä¸²å½¢å¼è½¬æ¢ä¸ºå­—èŠ‚æ•°è¡¨ç¤ºã€‚
+	 * @param sizeString	æ–‡ä»¶é•¿åº¦çš„å­—ç¬¦ä¸²è¡¨ç¤º
+	 * @return	æ–‡ä»¶å­—èŠ‚é•¿åº¦
+	 * @throws ParseException	ç»™å®šå­—ç¬¦ä¸²ä¸æ˜¯æ”¯æŒçš„å½¢å¼ï¼Œè§£æå¤±è´¥
 	 */
 	public static long stringToSize(String sizeString) throws ParseException {
 		Pattern pattern = Pattern.compile("(-?\\d+\\.?\\d*)([\\w]{0,2})", Pattern.CASE_INSENSITIVE);
@@ -103,11 +103,11 @@ public class FileInfo {
 		}
 		throw new ParseException(sizeString, 0);
 	}
-	
+
 	/**
-	 * »ñÈ¡Ê±¼ä¿ç¶ÈµÄÖÇÄÜ¿É¶Á×Ö·û´®ĞÎÊ½¡£ĞèÒª´«ÈëÒ»¸ö·Ç¸ºÕûÊı¡£
-	 * @param millisec	ºÁÃëµ¥Î»µÄÊ±¼ä¿ç¶È£¬·Ç¸ºÕûÊı
-	 * @return	Ê±¼ä¿ç¶ÈµÄ×Ö·û´®±íÊ¾
+	 * è·å–æ—¶é—´è·¨åº¦çš„æ™ºèƒ½å¯è¯»å­—ç¬¦ä¸²å½¢å¼ã€‚éœ€è¦ä¼ å…¥ä¸€ä¸ªéè´Ÿæ•´æ•°ã€‚
+	 * @param millisec	æ¯«ç§’å•ä½çš„æ—¶é—´è·¨åº¦ï¼Œéè´Ÿæ•´æ•°
+	 * @return	æ—¶é—´è·¨åº¦çš„å­—ç¬¦ä¸²è¡¨ç¤º
 	 */
 	public static String timeString(long timeMillis) {
 		if (timeMillis < 1000)
@@ -125,11 +125,11 @@ public class FileInfo {
 		else
 			return sContext.getString(R.string.util_fileinfo_years, timeMillis / (1000L * 60 * 60 * 24 * 30 * 12));
 	}
-	
+
 	/**
-	 * »ñÈ¡¾à½ñÊ±¼äµÄÖÇÄÜ¿É¶Á×Ö·û´®ĞÎÊ½¡£
-	 * @param millisec	ºÁÃëµ¥Î»µÄÊ±¼ä¿ç¶È
-	 * @return	¾à½ñÊ±¼äµÄ×Ö·û´®±íÊ¾
+	 * è·å–è·ä»Šæ—¶é—´çš„æ™ºèƒ½å¯è¯»å­—ç¬¦ä¸²å½¢å¼ã€‚
+	 * @param millisec	æ¯«ç§’å•ä½çš„æ—¶é—´è·¨åº¦
+	 * @return	è·ä»Šæ—¶é—´çš„å­—ç¬¦ä¸²è¡¨ç¤º
 	 */
 	public static String timeSpanString(long timeMillis) {
 		if (timeMillis > 0) {
@@ -138,12 +138,12 @@ public class FileInfo {
 			return sContext.getString(R.string.util_fileinfo_hence, timeString(-timeMillis));
 		}
 	}
-	
+
 	/**
-	 * ´ÓÊ±¼ä¿ç¶ÈµÄ×Ö·û´®ĞÎÊ½×ª»»ÎªºÁÃëÊı±íÊ¾¡£
-	 * @param sizeString	Ê±¼ä¿ç¶ÈµÄ×Ö·û´®±íÊ¾
-	 * @return	ºÁÃëÊı
-	 * @throws ParseException	¸ø¶¨×Ö·û´®²»ÊÇÖ§³ÖµÄĞÎÊ½£¬½âÎöÊ§°Ü
+	 * ä»æ—¶é—´è·¨åº¦çš„å­—ç¬¦ä¸²å½¢å¼è½¬æ¢ä¸ºæ¯«ç§’æ•°è¡¨ç¤ºã€‚
+	 * @param sizeString	æ—¶é—´è·¨åº¦çš„å­—ç¬¦ä¸²è¡¨ç¤º
+	 * @return	æ¯«ç§’æ•°
+	 * @throws ParseException	ç»™å®šå­—ç¬¦ä¸²ä¸æ˜¯æ”¯æŒçš„å½¢å¼ï¼Œè§£æå¤±è´¥
 	 */
 	public static long timespanToMillis(String timeString) throws ParseException {
 		Pattern pattern = Pattern.compile("(-?\\d+\\.?\\d*)([\\w]{0,1})", Pattern.CASE_INSENSITIVE);
@@ -165,11 +165,11 @@ public class FileInfo {
 		}
 		throw new ParseException(timeString, 0);
 	}
-	
+
 	/**
-	 * ³õÊ¼»¯ÎÄ¼şĞÅÏ¢¹¤¾ßº¯ÊıÓë³ÌĞòµÄ¹ØÁª¡£Ö÷³ÌĞò¸Ä±äÊ×Ñ¡ÏîºóÓ¦ÔÙ´Îµ÷ÓÃ´Ëº¯Êı¡£
-	 * @param prefs			³ÌĞòµÄÊ×Ñ¡Ïî¶ÔÏó£¬´ÓÕâÀï»ñµÃË÷ÒıÉèÖÃ
-	 * @param context		³ÌĞòÉÏÏÂÎÄ(½¨ÒéÔÚ Activity ¼°ÆäÅÉÉúÀàÖĞÓÃ getApplicationContext() »ñµÃ)
+	 * åˆå§‹åŒ–æ–‡ä»¶ä¿¡æ¯å·¥å…·å‡½æ•°ä¸ç¨‹åºçš„å…³è”ã€‚ä¸»ç¨‹åºæ”¹å˜é¦–é€‰é¡¹ååº”å†æ¬¡è°ƒç”¨æ­¤å‡½æ•°ã€‚
+	 * @param prefs			ç¨‹åºçš„é¦–é€‰é¡¹å¯¹è±¡ï¼Œä»è¿™é‡Œè·å¾—ç´¢å¼•è®¾ç½®
+	 * @param context		ç¨‹åºä¸Šä¸‹æ–‡(å»ºè®®åœ¨ Activity åŠå…¶æ´¾ç”Ÿç±»ä¸­ç”¨ getApplicationContext() è·å¾—)
 	 */
 	public static void init(SharedPreferences prefs, Context context) {
 		sContext = context;

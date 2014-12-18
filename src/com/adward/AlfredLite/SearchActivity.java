@@ -40,7 +40,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Collimator 锟斤拷锟筋动锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟�锟斤拷锟斤拷锟绞撅拷炔锟斤拷锟斤拷锟� * 
+ * 主活动，负责搜索处理，结果显示等操作 *
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2011.0515
  */
@@ -103,14 +103,14 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	final List<Match> mSearchResult = new ArrayList<Match>();
 	MatchAdapter mListAdapter;
 	SimpleAdapter mAdapter; //adapter for newly implemented functions
-	// 锟斤拷前状态锟斤拷锟斤拷
+	//当前状态变量
 	Match mSelectedMatch;
 	Expression mExpression;
 	boolean isSearching = false;
 	boolean isPickMode = false;
 	boolean isRangeLocked = false;
 	long startTick = 0;
-	// 锟斤拷选锟斤拷锟斤拷锟�	
+	// 首选项参数
 	boolean isTapView = true;
 	boolean isDeletePermitted = false;
 	boolean isReloadWithoutPrompt = false;
@@ -120,7 +120,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	//search key
 	String appCmd;
 	String contactCmd;
-	// 锟斤拷锟斤拷丶锟�	
+	// 界面控件
 	ImageButton mButtonRange;
 	ImageButton mButtonStar;
 	EditText mEditSearch;
@@ -945,11 +945,12 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 				getString(R.string.dialog_statistics_index_details, Index.length(), new Date(Index.reloadTime()).toLocaleString()) : 
 				getString(R.string.dialog_statistics_index_none)));
 	}
-    
+
 	/**
-	 * 锟叫讹拷一锟斤拷 Intent 锟斤拷系统锟斤拷锟角凤拷锟叫讹拷应锟侥活动锟斤拷锟皆达拷锟�
-	 * @param intent	要锟斤拷锟斤拷锟叫断碉拷 Intent锟斤拷
-	 * @return	锟斤拷 Intent 锟角凤拷锟斤拷员锟斤拷锟斤拷锟�	 */
+	 * 判断一个 Intent 在系统中是否有对应的活动可以处理。
+	 * @param intent	要进行判断的 Intent。
+	 * @return	该 Intent 是否可以被处理
+	 */
 	private boolean isIntentAvailable(Intent intent) {
         System.out.println("isIntentAvailable");
 	    final PackageManager packageManager = getPackageManager(); 

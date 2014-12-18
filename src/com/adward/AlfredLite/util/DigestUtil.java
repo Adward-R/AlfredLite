@@ -26,7 +26,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
 /**
- * ���ȡ�ļ�ժҪ����ؾ�̬���ߺ���
+ * 包含获取文件摘要的相关静态工具函数。
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1029
  */
@@ -39,10 +39,10 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	private Context mContext;
 	private SharedPreferences mPrefs;
 	private boolean isDisplayDigest;
-	
+
 	/**
-	 * ��ʼ���ļ�ժҪ����ʵ��
-	 * @param context	����������(������ Activity �������������� getApplicationContext() ���)
+	 * 初始化文件摘要工具实例。
+	 * @param context	程序上下文(建议在 Activity 及其派生类中用 getApplicationContext() 获得)
 	 */
 	public DigestUtil(Context context, Handler handler) {
 		super(handler);
@@ -69,11 +69,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	Spanned getDefault() {
 		return mLoadingDigest;
 	}
-	
+
 	/**
-	 * ��������·���ļ����ȡ���Ӧ��ժҪ��Ϣ�������ı��ļ�������ǰ120�ֽڵ���ݣ�����ͼƬ�ļ�������ͼƬ�ߴ磻���������ļ������������Ҽ�ר����Ϣ���������ͷ���null��
-	 * @param filename	�����·���ļ���
-	 * @return ����ַ�
+	 * 根据完整的路径文件名获取其对应的摘要信息。对于文本文件，返回前120字节的数据；对于图片文件，返回图片尺寸；对于音乐文件，返回艺术家及专辑信息；其他类型返回null。
+	 * @param filename	完整的路径文件名
+	 * @return 数据字符串
 	 */
 	private Spanned fromFile(String filename) {
 		Spanned digest = null;
@@ -97,9 +97,9 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	}
 	
 	/**
-	 * �Ӹ��ı��ļ��м���ǰ120�ֽڵ���ݡ�
-	 * @param path	�����·���ļ���
-	 * @return ����ַ�
+	 * 从给定文本文件中加载前120字节的数据。
+	 * @param path	完整的路径文件名
+	 * @return 数据字符串
 	 */
 	private Spanned loadFromText(String path) {
 		Spanned digest = null;
@@ -117,11 +117,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * �Ӹ���Ƶ�ļ��м���ժҪ��ݡ�
-	 * @param path	�����·���ļ���
-	 * @return ����ַ�
+	 * 从给定音频文件中加载摘要数据。
+	 * @param path	完整的路径文件名
+	 * @return 数据字符串
 	 */
 	private Spanned loadFromAudio(String path) {
 		Spanned digest = null;
@@ -139,11 +139,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * �Ӹ���Ƶ�ļ��м���ժҪ��ݡ�
-	 * @param path	�����·���ļ���
-	 * @return ����ַ�
+	 * 从给定视频文件中加载摘要数据。
+	 * @param path	完整的路径文件名
+	 * @return 数据字符串
 	 */
 	private Spanned loadFromVideo(String path) {
 		Spanned digest = null;
@@ -169,11 +169,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
         }
 		return digest;
 	}
-	
+
 	/**
-	 * �Ӹ�ͼ���ļ��м���ժҪ��ݡ�
-	 * @param path	�����·���ļ���
-	 * @return	 ����ַ�
+	 * 从给定图像文件中加载摘要数据。
+	 * @param path	完整的路径文件名
+	 * @return	 数据字符串
 	 */
 	private Spanned loadFromImage(String path) {
 		Spanned digest = null;
@@ -197,11 +197,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * �Ӹ�ѹ���ļ��м���ժҪ��ݡ�
-	 * @param path	�����·���ļ���
-	 * @return	 ����ַ�
+	 * 从给定压缩文件中加载摘要数据。
+	 * @param path	完整的路径文件名
+	 * @return	 数据字符串
 	 */
 	private Spanned loadFromArchive(String path) {
 		Spanned digest = null;
@@ -225,10 +225,10 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	}
 	
 	/**
-	 * �Ӹ�Ӧ�ó�����ļ��м���ժҪ��ݡ�
-	 * @param path	�����·���ļ���
-	 * @return	 ����ַ�
-	 */
+	* 从给定应用程序包文件中加载摘要数据。
+			* @param path	完整的路径文件名
+	* @return	 数据字符串
+	*/
 	private Spanned loadFromApk(String path) {
 		Spanned digest = null;
 		PackageManager pm = mContext.getPackageManager();      
