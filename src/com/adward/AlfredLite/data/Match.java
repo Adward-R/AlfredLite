@@ -7,91 +7,91 @@ import android.text.Spanned;
 import com.adward.AlfredLite.util.FileInfo;
 
 /**
- * Ã¿¸ö Match ¶ÔÏó±íÊ¾³É¹¦µÄµ¥¸öÆ¥ÅäÏî¡£
+ * æ¯ä¸ª Match å¯¹è±¡è¡¨ç¤ºæˆåŠŸçš„å•ä¸ªåŒ¹é…é¡¹ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1104
  */
 public final class Match {
 	private final int mIndex;
 	private boolean[] mHilite;
-	
+
 	/**
-	 * Æ¥ÅäÏî¹¹Ôìº¯Êı¡£
-	 * @param entry		´Ë³É¹¦Æ¥ÅäµÄË÷ÒıÌõÄ¿
+	 * åŒ¹é…é¡¹æ„é€ å‡½æ•°ã€‚
+	 * @param entry		æ­¤æˆåŠŸåŒ¹é…çš„ç´¢å¼•æ¡ç›®
 	 */
 	public Match(int index) {
 		mIndex = index;
 		mHilite = new boolean[Index.getName(index).length()];
 	}
-	
+
 	/**
-	 * ÉèÖÃÆ¥ÅäÏîÎÄ¼şÃûµÄ¸ßÁÁ·¶Î§¡£Èç¹ûÓĞ¶à´¦¸ßÁÁ·¶Î§£¬¿É¶à´Îµ÷ÓÃ±¾º¯Êı¡£
-	 * @param start		¸ßÁÁ·¶Î§Æğµã
-	 * @param end		¸ßÁÁ·¶Î§ÖÕµã
+	 * è®¾ç½®åŒ¹é…é¡¹æ–‡ä»¶åçš„é«˜äº®èŒƒå›´ã€‚å¦‚æœæœ‰å¤šå¤„é«˜äº®èŒƒå›´ï¼Œå¯å¤šæ¬¡è°ƒç”¨æœ¬å‡½æ•°ã€‚
+	 * @param start		é«˜äº®èŒƒå›´èµ·ç‚¹
+	 * @param end		é«˜äº®èŒƒå›´ç»ˆç‚¹
 	 */
 	public void setHilite(int start, int end) {
 		for (int i = start; i < end; i++)
 			mHilite[i] = true;
 	}
-	
+
 	/**
-	 * »ñÈ¡´ËÆ¥ÅäÏî¶ÔÓ¦µÄË÷Òı¡£
-	 * @return Ë÷Òı
+	 * è·å–æ­¤åŒ¹é…é¡¹å¯¹åº”çš„ç´¢å¼•ã€‚
+	 * @return ç´¢å¼•
 	 */
 	public int index() { return mIndex; }
 	/**
-	 * »ñÈ¡ÎÄ¼şÃû¡£
-	 * @return	ÎÄ¼şÃû
+	 * è·å–æ–‡ä»¶åã€‚
+	 * @return	æ–‡ä»¶å
 	 */
 	public String name() { return Index.getName(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼şÃûµÄÊ××ÖÄ¸±íÊ¾¡£ÈôÃ»ÓĞÎªÊ××ÖÄ¸½¨Á¢Ë÷Òı£¬º¯Êı·µ»Ø null¡£
-	 * @return	ÎÄ¼şÃûµÄÊ××ÖÄ¸±íÊ¾
+	 * è·å–æ–‡ä»¶åçš„é¦–å­—æ¯è¡¨ç¤ºã€‚è‹¥æ²¡æœ‰ä¸ºé¦–å­—æ¯å»ºç«‹ç´¢å¼•ï¼Œå‡½æ•°è¿”å› nullã€‚
+	 * @return	æ–‡ä»¶åçš„é¦–å­—æ¯è¡¨ç¤º
 	 */
 	public String nameAlpha() { return Index.getNameAlpha(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼şËùÔÚµÄÂ·¾¶¡£
-	 * @return	Â·¾¶×Ö·û´®
+	 * è·å–æ–‡ä»¶æ‰€åœ¨çš„è·¯å¾„ã€‚
+	 * @return	è·¯å¾„å­—ç¬¦ä¸²
 	 */
 	public String path() { return Index.getPath(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼şËùÔÚÂ·¾¶µÄÊ××ÖÄ¸±íÊ¾¡£ÈôÃ»ÓĞÎªÊ××ÖÄ¸½¨Á¢Ë÷Òı£¬º¯Êı·µ»Ø null¡£
-	 * @return	Â·¾¶×Ö·û´®µÄÊ××ÖÄ¸±íÊ¾
+	 * è·å–æ–‡ä»¶æ‰€åœ¨è·¯å¾„çš„é¦–å­—æ¯è¡¨ç¤ºã€‚è‹¥æ²¡æœ‰ä¸ºé¦–å­—æ¯å»ºç«‹ç´¢å¼•ï¼Œå‡½æ•°è¿”å› nullã€‚
+	 * @return	è·¯å¾„å­—ç¬¦ä¸²çš„é¦–å­—æ¯è¡¨ç¤º
 	 */
 	public String pathAlpha() { return Index.getPathAlpha(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼şÒÔ×Ö½ÚÎªµ¥Î»±íÊ¾µÄÎÄ¼ş³¤¶È¡£
-	 * @return	ÎÄ¼ş³¤¶È
+	 * è·å–æ–‡ä»¶ä»¥å­—èŠ‚ä¸ºå•ä½è¡¨ç¤ºçš„æ–‡ä»¶é•¿åº¦ã€‚
+	 * @return	æ–‡ä»¶é•¿åº¦
 	 */
 	public long size() { return Index.getSize(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼ş³¤¶ÈµÄÖÇÄÜ¿É¶Á×Ö·û´®ĞÎÊ½¡£
-	 * @return	ÎÄ¼ş³¤¶ÈµÄ×Ö·û´®±íÊ¾
+	 * è·å–æ–‡ä»¶é•¿åº¦çš„æ™ºèƒ½å¯è¯»å­—ç¬¦ä¸²å½¢å¼ã€‚
+	 * @return	æ–‡ä»¶é•¿åº¦çš„å­—ç¬¦ä¸²è¡¨ç¤º
 	 */
 	public String sizeString() { return FileInfo.sizeString(Index.getSize(mIndex)); }
 	/**
-	 * »ñÈ¡ÎÄ¼şÉÏ´ÎĞŞ¸ÄÊ±¼ä¾à 1970-01-01 µÄºÁÃëÊı¡£
-	 * @return	ÉÏ´ÎĞŞ¸ÄÊ±¼äµÄºÁÃëÊı
+	 * è·å–æ–‡ä»¶ä¸Šæ¬¡ä¿®æ”¹æ—¶é—´è· 1970-01-01 çš„æ¯«ç§’æ•°ã€‚
+	 * @return	ä¸Šæ¬¡ä¿®æ”¹æ—¶é—´çš„æ¯«ç§’æ•°
 	 */
 	public long time() { return Index.getTime(mIndex); }
 	/**
-	 * »ñÈ¡ÎÄ¼şÉÏ´ÎĞŞ¸ÄÊ±¼ä¾à½ñµÄ±¾µØ»¯×Ö·û´®±íÊ¾¡£
-	 * @return	¾à½ñÊ±¼äµÄ±¾µØ»¯±íÊ¾
+	 * è·å–æ–‡ä»¶ä¸Šæ¬¡ä¿®æ”¹æ—¶é—´è·ä»Šçš„æœ¬åœ°åŒ–å­—ç¬¦ä¸²è¡¨ç¤ºã€‚
+	 * @return	è·ä»Šæ—¶é—´çš„æœ¬åœ°åŒ–è¡¨ç¤º
 	 */
 	public String timeString() { return FileInfo.timeSpanString(System.currentTimeMillis() - Index.getTime(mIndex)); }
 	/***
-	 * »ñÈ¡ÎÄ¼şËõÂÔÍ¼¡£Èç¹ûËõÂÔÍ¼ÒÑ»º´æ£¬ÔòÖ±½Ó·µ»ØËõÂÔÍ¼£»·ñÔò·µ»Ø null£¬²¢Æô¶¯Ò»¸öĞÂÏß³ÌºóÌ¨»ñÈ¡ËõÂÔÍ¼¡£µ±ËõÂÔÍ¼³É¹¦È¡µÃÊ±ÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ RELOAD_UPDATE_THUMBNAIL ÏûÏ¢£¬Í¨ÖªËõÂÔÍ¼ÒÑ¸üĞÂ¡£
-	 * @return ÎÄ¼şËõÂÔÍ¼Î»Í¼
+	 * è·å–æ–‡ä»¶ç¼©ç•¥å›¾ã€‚å¦‚æœç¼©ç•¥å›¾å·²ç¼“å­˜ï¼Œåˆ™ç›´æ¥è¿”å›ç¼©ç•¥å›¾ï¼›å¦åˆ™è¿”å› nullï¼Œå¹¶å¯åŠ¨ä¸€ä¸ªæ–°çº¿ç¨‹åå°è·å–ç¼©ç•¥å›¾ã€‚å½“ç¼©ç•¥å›¾æˆåŠŸå–å¾—æ—¶å‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ RELOAD_UPDATE_THUMBNAIL æ¶ˆæ¯ï¼Œé€šçŸ¥ç¼©ç•¥å›¾å·²æ›´æ–°ã€‚
+	 * @return æ–‡ä»¶ç¼©ç•¥å›¾ä½å›¾
 	 */
 	public Bitmap thumbnail() { return Index.getThumbnail(mIndex); }
 	/***
-	 * »ñÈ¡ÎÄ¼şµÄÕªÒªĞÅÏ¢¡£Èç¹ûÕªÒªĞÅÏ¢ÒÑ»º´æ£¬ÔòÖ±½Ó·µ»ØĞÅÏ¢£»·ñÔò·µ»Ø null£¬²¢Æô¶¯Ò»¸öĞÂÏß³ÌºóÌ¨»ñÈ¡ÎÄ¼şÕªÒª¡£µ±ÎÄ¼şÕªÒª³É¹¦È¡µÃÊ±ÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍ RELOAD_UPDATE_DIGEST ÏûÏ¢£¬Í¨ÖªÎÄ¼şÕªÒªÒÑ¸üĞÂ¡£
-	 * @return ÎÄ¼şÕªÒª×Ö·û´®
+	 * è·å–æ–‡ä»¶çš„æ‘˜è¦ä¿¡æ¯ã€‚å¦‚æœæ‘˜è¦ä¿¡æ¯å·²ç¼“å­˜ï¼Œåˆ™ç›´æ¥è¿”å›ä¿¡æ¯ï¼›å¦åˆ™è¿”å› nullï¼Œå¹¶å¯åŠ¨ä¸€ä¸ªæ–°çº¿ç¨‹åå°è·å–æ–‡ä»¶æ‘˜è¦ã€‚å½“æ–‡ä»¶æ‘˜è¦æˆåŠŸå–å¾—æ—¶å‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ RELOAD_UPDATE_DIGEST æ¶ˆæ¯ï¼Œé€šçŸ¥æ–‡ä»¶æ‘˜è¦å·²æ›´æ–°ã€‚
+	 * @return æ–‡ä»¶æ‘˜è¦å­—ç¬¦ä¸²
 	 */
 	public Spanned digest() { return Index.getDigest(mIndex); }
 	/***
-	 * »ñÈ¡¸ßÁÁ´¦ÀíºóµÄÎÄ¼şÃûÏÔÊ¾´®¡£
-	 * @return ¸ßÁÁÎÄ±¾´®
+	 * è·å–é«˜äº®å¤„ç†åçš„æ–‡ä»¶åæ˜¾ç¤ºä¸²ã€‚
+	 * @return é«˜äº®æ–‡æœ¬ä¸²
 	 */
 	public Spanned highlightedName() {
 		String source = Index.getName(mIndex);

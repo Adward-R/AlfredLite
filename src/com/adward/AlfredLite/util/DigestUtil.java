@@ -1,14 +1,5 @@
 package com.adward.AlfredLite.util;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
-
-import org.mozilla.universalchardet.UniversalDetector;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
@@ -24,12 +15,18 @@ import android.preference.PreferenceManager;
 import android.provider.MediaStore;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
-
 import com.adward.AlfredLite.R;
+import org.mozilla.universalchardet.UniversalDetector;
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
- * °üº¬»ñÈ¡ÎÄ¼şÕªÒªµÄÏà¹Ø¾²Ì¬¹¤¾ßº¯Êı¡£
+ * åŒ…å«è·å–æ–‡ä»¶æ‘˜è¦çš„ç›¸å…³é™æ€å·¥å…·å‡½æ•°ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1029
  */
@@ -42,10 +39,10 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	private Context mContext;
 	private SharedPreferences mPrefs;
 	private boolean isDisplayDigest;
-	
+
 	/**
-	 * ³õÊ¼»¯ÎÄ¼şÕªÒª¹¤¾ßÊµÀı¡£
-	 * @param context	³ÌĞòÉÏÏÂÎÄ(½¨ÒéÔÚ Activity ¼°ÆäÅÉÉúÀàÖĞÓÃ getApplicationContext() »ñµÃ)
+	 * åˆå§‹åŒ–æ–‡ä»¶æ‘˜è¦å·¥å…·å®ä¾‹ã€‚
+	 * @param context	ç¨‹åºä¸Šä¸‹æ–‡(å»ºè®®åœ¨ Activity åŠå…¶æ´¾ç”Ÿç±»ä¸­ç”¨ getApplicationContext() è·å¾—)
 	 */
 	public DigestUtil(Context context, Handler handler) {
 		super(handler);
@@ -72,11 +69,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	Spanned getDefault() {
 		return mLoadingDigest;
 	}
-	
+
 	/**
-	 * ¸ù¾İÍêÕûµÄÂ·¾¶ÎÄ¼şÃû»ñÈ¡Æä¶ÔÓ¦µÄÕªÒªĞÅÏ¢¡£¶ÔÓÚÎÄ±¾ÎÄ¼ş£¬·µ»ØÇ°120×Ö½ÚµÄÊı¾İ£»¶ÔÓÚÍ¼Æ¬ÎÄ¼ş£¬·µ»ØÍ¼Æ¬³ß´ç£»¶ÔÓÚÒôÀÖÎÄ¼ş£¬·µ»ØÒÕÊõ¼Ò¼°×¨¼­ĞÅÏ¢£»ÆäËûÀàĞÍ·µ»Ønull¡£
-	 * @param filename	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return Êı¾İ×Ö·û´®
+	 * æ ¹æ®å®Œæ•´çš„è·¯å¾„æ–‡ä»¶åè·å–å…¶å¯¹åº”çš„æ‘˜è¦ä¿¡æ¯ã€‚å¯¹äºæ–‡æœ¬æ–‡ä»¶ï¼Œè¿”å›å‰120å­—èŠ‚çš„æ•°æ®ï¼›å¯¹äºå›¾ç‰‡æ–‡ä»¶ï¼Œè¿”å›å›¾ç‰‡å°ºå¯¸ï¼›å¯¹äºéŸ³ä¹æ–‡ä»¶ï¼Œè¿”å›è‰ºæœ¯å®¶åŠä¸“è¾‘ä¿¡æ¯ï¼›å…¶ä»–ç±»å‹è¿”å›nullã€‚
+	 * @param filename	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned fromFile(String filename) {
 		Spanned digest = null;
@@ -100,9 +97,9 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	}
 	
 	/**
-	 * ´Ó¸ø¶¨ÎÄ±¾ÎÄ¼şÖĞ¼ÓÔØÇ°120×Ö½ÚµÄÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return Êı¾İ×Ö·û´®
+	 * ä»ç»™å®šæ–‡æœ¬æ–‡ä»¶ä¸­åŠ è½½å‰120å­—èŠ‚çš„æ•°æ®ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned loadFromText(String path) {
 		Spanned digest = null;
@@ -120,11 +117,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨ÒôÆµÎÄ¼şÖĞ¼ÓÔØÕªÒªÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return Êı¾İ×Ö·û´®
+	 * ä»ç»™å®šéŸ³é¢‘æ–‡ä»¶ä¸­åŠ è½½æ‘˜è¦æ•°æ®ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned loadFromAudio(String path) {
 		Spanned digest = null;
@@ -142,17 +139,18 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨ÊÓÆµÎÄ¼şÖĞ¼ÓÔØÕªÒªÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return Êı¾İ×Ö·û´®
+	 * ä»ç»™å®šè§†é¢‘æ–‡ä»¶ä¸­åŠ è½½æ‘˜è¦æ•°æ®ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned loadFromVideo(String path) {
 		Spanned digest = null;
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
         try {
-            retriever.setMode(MediaMetadataRetriever.MODE_GET_METADATA_ONLY);
+            //retriever.setMode(MediaMetadataRetriever.MODE_GET_METADATA_ONLY);
+			//setMode is out of data, simplely ignore this step will do
             retriever.setDataSource(path);
             String width = format(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
             String height = format(retriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_VIDEO_WIDTH));
@@ -171,11 +169,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
         }
 		return digest;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨Í¼ÏñÎÄ¼şÖĞ¼ÓÔØÕªÒªÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 Êı¾İ×Ö·û´®
+	 * ä»ç»™å®šå›¾åƒæ–‡ä»¶ä¸­åŠ è½½æ‘˜è¦æ•°æ®ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned loadFromImage(String path) {
 		Spanned digest = null;
@@ -199,11 +197,11 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 		}
 		return digest;
 	}
-	
+
 	/**
-	 * ´Ó¸ø¶¨Ñ¹ËõÎÄ¼şÖĞ¼ÓÔØÕªÒªÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 Êı¾İ×Ö·û´®
+	 * ä»ç»™å®šå‹ç¼©æ–‡ä»¶ä¸­åŠ è½½æ‘˜è¦æ•°æ®ã€‚
+	 * @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	 * @return	 æ•°æ®å­—ç¬¦ä¸²
 	 */
 	private Spanned loadFromArchive(String path) {
 		Spanned digest = null;
@@ -227,10 +225,10 @@ public class DigestUtil extends SoftCache<String, Spanned> {
 	}
 	
 	/**
-	 * ´Ó¸ø¶¨Ó¦ÓÃ³ÌĞò°üÎÄ¼şÖĞ¼ÓÔØÕªÒªÊı¾İ¡£
-	 * @param path	ÍêÕûµÄÂ·¾¶ÎÄ¼şÃû
-	 * @return	 Êı¾İ×Ö·û´®
-	 */
+	* ä»ç»™å®šåº”ç”¨ç¨‹åºåŒ…æ–‡ä»¶ä¸­åŠ è½½æ‘˜è¦æ•°æ®ã€‚
+			* @param path	å®Œæ•´çš„è·¯å¾„æ–‡ä»¶å
+	* @return	 æ•°æ®å­—ç¬¦ä¸²
+	*/
 	private Spanned loadFromApk(String path) {
 		Spanned digest = null;
 		PackageManager pm = mContext.getPackageManager();      

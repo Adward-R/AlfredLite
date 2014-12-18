@@ -1,18 +1,16 @@
 package com.adward.AlfredLite.data;
 
+import android.content.Context;
+import com.adward.AlfredLite.R;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import android.content.Context;
-
-import com.adward.AlfredLite.R;
-
 /**
- * ´ú±íÒ»¸ö¼ìË÷Ê½£¬°üº¬¼ìË÷·¶Î§¼°ÅÅĞò·½Ê½µÈĞÅÏ¢¡£Ö§³ÖĞòÁĞ»¯µ½JSON×Ö·û´®£¬ÒÔ¼°´ÓJSON×Ö·û´®»Ö¸´¡£
+ * ä»£è¡¨ä¸€ä¸ªæ£€ç´¢å¼ï¼ŒåŒ…å«æ£€ç´¢èŒƒå›´åŠæ’åºæ–¹å¼ç­‰ä¿¡æ¯ã€‚æ”¯æŒåºåˆ—åŒ–åˆ°JSONå­—ç¬¦ä¸²ï¼Œä»¥åŠä»JSONå­—ç¬¦ä¸²æ¢å¤ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1015
  */
@@ -23,19 +21,19 @@ public final class Expression {
 	private boolean mSortReverse = true;
 	private String mKey = "";
 	private String mName;
-	
+
 	/**
-	 * ¹¹ÔìÒ»¸ö¿ÕµÄÄ¬ÈÏ¼ìË÷Ê½¡£
-	 * @param context	Ó¦ÓÃ³ÌĞòÉÏÏÂÎÄ
+	 * æ„é€ ä¸€ä¸ªç©ºçš„é»˜è®¤æ£€ç´¢å¼ã€‚
+	 * @param context	åº”ç”¨ç¨‹åºä¸Šä¸‹æ–‡
 	 */
 	public Expression(Context context) { 
 		mContext = context;
 	}
-	
+
 	/**
-	 * ´ÓÒ»¸öJSON¶ÔÏó×Ö·û´®¹¹Ôì¼ìË÷Ê½¡£
-	 * @param context	Ó¦ÓÃ³ÌĞòÉÏÏÂÎÄ
-	 * @param json		JSON¶ÔÏó×Ö·û´®
+	 * ä»ä¸€ä¸ªJSONå¯¹è±¡å­—ç¬¦ä¸²æ„é€ æ£€ç´¢å¼ã€‚
+	 * @param context	åº”ç”¨ç¨‹åºä¸Šä¸‹æ–‡
+	 * @param json		JSONå¯¹è±¡å­—ç¬¦ä¸²
 	 */
 	public Expression(Context context, String json) {
 		this(context);
@@ -50,116 +48,117 @@ public final class Expression {
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½µÄ±È½ÏÆ÷¡£
-	 * @return ±È½ÏÆ÷
+	 * è·å–æ­¤æ£€ç´¢å¼çš„æ¯”è¾ƒå™¨ã€‚
+	 * @return æ¯”è¾ƒå™¨
 	 */
 	public Comparator<Match> getSorter() {
 		return Sorter.getSorter(mSortMode, mSortReverse);
 	}
-	
+
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½µÄÅÅĞò·½Ê½(³£ÊıÎ»ÓÚSorterÀàÖĞ)¡£
-	 * @return ÅÅĞò·½Ê½³£Êı
+	 * è·å–æ­¤æ£€ç´¢å¼çš„æ’åºæ–¹å¼(å¸¸æ•°ä½äºSorterç±»ä¸­)ã€‚
+	 * @return æ’åºæ–¹å¼å¸¸æ•°
 	 */
 	public int getSortMode() {
 		return mSortMode;
 	}
-	
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½µÄÅÅĞò·½Ïò¡£
-	 * @return ÊÇ·ñ½µĞò
+	 * è·å–æ­¤æ£€ç´¢å¼çš„æ’åºæ–¹å‘ã€‚
+	 * @return æ˜¯å¦é™åº
 	 */
 	public boolean getSortReverse() {
 		return mSortReverse;
 	}
-	
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½µÄËÑË÷·¶Î§(Î»ÓÚarray.xmlÖĞ)¡£
-	 * @return ËÑË÷·¶Î§ÕûÊı
+	 * è·å–æ­¤æ£€ç´¢å¼çš„æœç´¢èŒƒå›´(ä½äºarray.xmlä¸­)ã€‚
+	 * @return æœç´¢èŒƒå›´æ•´æ•°
 	 */
 	public int getRange() {
 		return mRange;
 	}
-	
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½ÓÃ»§ÊäÈëµÄ¹Ø¼ü×Ö¡£
-	 * @return ¹Ø¼ü×Ö×Ö·û´®
+	 * è·å–æ­¤æ£€ç´¢å¼ç”¨æˆ·è¾“å…¥çš„å…³é”®å­—ã€‚
+	 * @return å…³é”®å­—å­—ç¬¦ä¸²
 	 */
 	public String getKey() {
 		return mKey;
 	}
-	
+
 	/**
-	 * »ñÈ¡´Ë¼ìË÷Ê½µÄÃû³Æ¡£
-	 * @return Ãû³Æ×Ö·û´®
+	 * è·å–æ­¤æ£€ç´¢å¼çš„åç§°ã€‚
+	 * @return åç§°å­—ç¬¦ä¸²
 	 */
 	public String getName() {
 		if (mName == null) return mKey;
 		return mName;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½µÄÅÅĞò·½Ê½¡£
-	 * @param sortMode ÅÅĞò·½Ê½(³£ÊıÎ»ÓÚSorterÀàÖĞ)
-	 * @param reverse	ÊÇ·ñ½µĞò
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼çš„æ’åºæ–¹å¼ã€‚
+	 * @param sortMode æ’åºæ–¹å¼(å¸¸æ•°ä½äºSorterç±»ä¸­)
+	 * @param reverse	æ˜¯å¦é™åº
 	 */
 	public void setSort(int sortMode, boolean reverse) {
 		mSortMode = sortMode;
 		mSortReverse = reverse;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½µÄÅÅĞò·½Ê½¡£
-	 * @param sortMode ÅÅĞò·½Ê½(³£ÊıÎ»ÓÚSorterÀàÖĞ)
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼çš„æ’åºæ–¹å¼ã€‚
+	 * @param sortMode æ’åºæ–¹å¼(å¸¸æ•°ä½äºSorterç±»ä¸­)
 	 */
 	public void setSort(int sortMode) {
 		mSortMode = sortMode;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½µÄÅÅĞò·½Ê½¡£
-	 * @param reverse	ÊÇ·ñ½µĞò
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼çš„æ’åºæ–¹å¼ã€‚
+	 * @param reverse	æ˜¯å¦é™åº
 	 */
 	public void setSort(boolean reverse) {
 		mSortReverse = reverse;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½µÄËÑË÷·¶Î§(Î»ÓÚarray.xmlÖĞ)¡£
-	 * @param range		ËÑË÷·¶Î§ÕûÊı
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼çš„æœç´¢èŒƒå›´(ä½äºarray.xmlä¸­)ã€‚
+	 * @param range		æœç´¢èŒƒå›´æ•´æ•°
 	 */
 	public void setRange(int range) {
 		mRange = range;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½ÓÃ»§ÊäÈëµÄ¹Ø¼ü×Ö¡£
-	 * @param key	¹Ø¼ü×Ö×Ö·û´®
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼ç”¨æˆ·è¾“å…¥çš„å…³é”®å­—ã€‚
+	 * @param key	å…³é”®å­—å­—ç¬¦ä¸²
 	 */
 	public void setKey(String key) {
 		mKey = key;
 	}
-	
+
 	/**
-	 * ÉèÖÃ´Ë¼ìË÷Ê½µÄÃû³Æ¡£
-	 * @return Ãû³Æ×Ö·û´®
+	 * è®¾ç½®æ­¤æ£€ç´¢å¼çš„åç§°ã€‚
+	 * @return åç§°å­—ç¬¦ä¸²
 	 */
 	public void setName(String name) {
 		mName = name;
 	}
-	
+
 	/**
-	 * Ê¹ÓÃ´Ë¼ìË÷Ê½½øĞĞÒì²½Æ¥Åä¡£ÆÚ¼ä²úÉúµÄÈÎºÎÏûÏ¢¶¼½«·¢ËÍµ½ Matcher ÀàµÄÏûÏ¢´¦ÀíÆ÷£¬Òò´ËÒª½Ø»ñÏûÏ¢£¬ÏÈµ÷ÓÃ Matcher.init ·½·¨×¢²áÏûÏ¢´¦ÀíÆ÷¡£Èç¹ûÒÑÓĞÒ»´ÎÆ¥Åä¹ı³ÌÔÚ½øĞĞÖĞ£¬½«È¡ÏûÏÈÇ°µÄÆ¥Åä¹ı³Ì£¬È»ºóÆô¶¯ĞÂµÄÆ¥Åä¡£
+	 * ä½¿ç”¨æ­¤æ£€ç´¢å¼è¿›è¡Œå¼‚æ­¥åŒ¹é…ã€‚æœŸé—´äº§ç”Ÿçš„ä»»ä½•æ¶ˆæ¯éƒ½å°†å‘é€åˆ° Matcher ç±»çš„æ¶ˆæ¯å¤„ç†å™¨ï¼Œå› æ­¤è¦æˆªè·æ¶ˆæ¯ï¼Œå…ˆè°ƒç”¨ Matcher.init æ–¹æ³•æ³¨å†Œæ¶ˆæ¯å¤„ç†å™¨ã€‚å¦‚æœå·²æœ‰ä¸€æ¬¡åŒ¹é…è¿‡ç¨‹åœ¨è¿›è¡Œä¸­ï¼Œå°†å–æ¶ˆå…ˆå‰çš„åŒ¹é…è¿‡ç¨‹ï¼Œç„¶åå¯åŠ¨æ–°çš„åŒ¹é…ã€‚
 	 */
 	public void matchAsync() {
 		Matcher.matchAsync(matchers());
 	}
-	
+
 	/**
-	 * ½âÎö¸ø¶¨µÄÆ¥Åä±í´ïÊ½£¬²¢ÊÔÍ¼×ª»»Îª Matcher ¶ÔÏóÊı×é¡£Èç¹û±í´ïÊ½ÓĞĞ§£¬½«·µ»Ø½âÎöµÃµ½µÄ Matcher Êı×é£¬·ñÔò·µ»Ø null¡£
-	 * @return ½âÎöµÃµ½µÄ Matcher Êı×é »ò null
+	 * è§£æç»™å®šçš„åŒ¹é…è¡¨è¾¾å¼ï¼Œå¹¶è¯•å›¾è½¬æ¢ä¸º Matcher å¯¹è±¡æ•°ç»„ã€‚å¦‚æœè¡¨è¾¾å¼æœ‰æ•ˆï¼Œå°†è¿”å›è§£æå¾—åˆ°çš„ Matcher æ•°ç»„ï¼Œå¦åˆ™è¿”å› nullã€‚
+	 * @return è§£æå¾—åˆ°çš„ Matcher æ•°ç»„ æˆ– null
 	 */
 	public Matcher[] matchers() {
 		String[] keys = mKey.split(" ");
@@ -177,10 +176,10 @@ public final class Expression {
 			return null;
 		}
 	}
-	
+
 	/**
-	 * ½«¼ìË÷Ê½×ª»¯ÎªJSON¶ÔÏó×Ö·û´®±íÊ¾¡£
-	 * @return JSON¶ÔÏó×Ö·û´®
+	 * å°†æ£€ç´¢å¼è½¬åŒ–ä¸ºJSONå¯¹è±¡å­—ç¬¦ä¸²è¡¨ç¤ºã€‚
+	 * @return JSONå¯¹è±¡å­—ç¬¦ä¸²
 	 */
 	public String toJSON() {
 		JSONObject obj = new JSONObject();

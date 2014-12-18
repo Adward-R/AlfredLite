@@ -125,5 +125,7 @@
 
 	<string name="dialog_custom_app_title">应用搜索命令</string>
 	<string name="dialog_custom_contact_title">联系人搜索命令</string>
-    
+	<string name="dialog_app_open_err_title">未知錯誤</string>
+	<string name="dialog_app_open_err_msg">無法打開該應用</string>
+
 </resources>

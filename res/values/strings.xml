@@ -124,5 +124,7 @@
     <string name="dialog_skip">Don\'t show again</string>
     <string name="dialog_custom_app_title">App Search</string>
     <string name="dialog_custom_contact_title">Contact Search</string>
+    <string name="dialog_app_open_err_title">Unknown Error</string>
+    <string name="dialog_app_open_err_msg">Cannot open this application!</string>
     
 </resources>

@@ -23,7 +23,7 @@ public final class HelpActivity extends Activity {
 		webSettings.setJavaScriptEnabled(true);
 		webSettings.setSupportZoom(false); 
 		webSettings.setSavePassword(false);
-		webView.addJavascriptInterface(new Object() {  //添加javascript可调用的接口
+		webView.addJavascriptInterface(new Object() {  //娣诲姞javascript鍙皟鐢ㄧ殑鎺ュ彛
             @SuppressWarnings("unused")
 			public void doSearch(final String key) {
                 mHandler.post(new Runnable() {

@@ -1,44 +1,43 @@
 package com.adward.AlfredLite.util;
 
+import android.os.Handler;
+import android.os.Message;
+
 import java.lang.ref.SoftReference;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
-import android.os.Handler;
-import android.os.Message;
-import android.util.Log;
-
 /**
- * ´ú±íÒ»¸öÈíÒıÓÃ»º´æÆ÷¡£ÅÉÉúÀàÓ¦ÖØĞ´ request ·½·¨»ñÈ¡¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û¡£
+ * ä»£è¡¨ä¸€ä¸ªè½¯å¼•ç”¨ç¼“å­˜å™¨ã€‚æ´¾ç”Ÿç±»åº”é‡å†™ request æ–¹æ³•è·å–å…³é”®å­—å¯¹åº”çš„ç»“æœã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1104
  *
- * @param <K>	¹Ø¼ü×ÖµÄÀàĞÍ
- * @param <V>	½á¹ûµÄÀàĞÍ
+ * @param <K>	å…³é”®å­—çš„ç±»å‹
+ * @param <V>	ç»“æœçš„ç±»å‹
  */
 public abstract class SoftCache<K, V> {
 
 	private static final int MESSAGE_FIRST = 200;
 	public static final int MESSAGE_CACHE_GOT = MESSAGE_FIRST + 1;
 	public static final int MESSAGE_QUEUE_FINISHED = MESSAGE_FIRST + 2;
-	
-    private final ConcurrentHashMap<K, SoftReference<V>> cache = new ConcurrentHashMap<K, SoftReference<V>>();
-    private final LinkedBlockingQueue<K> queue = new LinkedBlockingQueue<K>();
-    private final SoftReference<V> loadingHolder = new SoftReference<V>(null);
-    private final Handler callback;
-    private final Thread thread = new Thread() {
+
+	private final ConcurrentHashMap<K, SoftReference<V>> cache = new ConcurrentHashMap<K, SoftReference<V>>();
+	private final LinkedBlockingQueue<K> queue = new LinkedBlockingQueue<K>();
+	private final SoftReference<V> loadingHolder = new SoftReference<V>(null);
+	private final Handler callback;
+	private final Thread thread = new Thread() {
 		public void run() {
 			K key;
 			while (true) {
 				try {
 					key = queue.take();
-			    	requestAndCache(key);
-			    	if (!isInterrupted()) {
-				    	sendHandlerMessage(MESSAGE_CACHE_GOT, 0, 0, key);
-				    	if (queue.size() == 0) sendHandlerMessage(MESSAGE_QUEUE_FINISHED, 0, 0, null);
-			    	} else {
-			    		clearQueue();
-			    	}
+					requestAndCache(key);
+					if (!isInterrupted()) {
+						sendHandlerMessage(MESSAGE_CACHE_GOT, 0, 0, key);
+						if (queue.size() == 0) sendHandlerMessage(MESSAGE_QUEUE_FINISHED, 0, 0, null);
+					} else {
+						clearQueue();
+					}
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 					clearQueue();
@@ -48,115 +47,115 @@ public abstract class SoftCache<K, V> {
 	};
 
 	/**
-	 * ¹¹ÔìÒ»¸öĞÂµÄÈíÒıÓÃ»º´æÆ÷¡£
-	 * @param callback	Òì²½ÇëÇó·µ»ØÊ±µÄ»Øµ÷ Handler
+	 * æ„é€ ä¸€ä¸ªæ–°çš„è½¯å¼•ç”¨ç¼“å­˜å™¨ã€‚
+	 * @param callback	å¼‚æ­¥è¯·æ±‚è¿”å›æ—¶çš„å›è°ƒ Handler
 	 */
-    public SoftCache(Handler callback) {
-    	this.callback = callback;
-    	thread.setDaemon(true);
-    	thread.start();
-    }
-    
-    /**
-     * Ïò»º´æÇëÇóÒ»¸ö¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û¡£Èô½á¹û²»ÔÚ»º´æÖĞ»òÒÑ²»¿ÉÓÃ£¬·µ»Ø Ä¬ÈÏÖµ ²¢½«½á¹ûÖÃÈëÇëÇó¶ÓÁĞ£»·ñÔò´Ó»º´æÖĞ²éÕÒ½á¹û²¢·µ»Ø¡£Ã¿¸ö»º´æÇëÇóÍê³Éºó¶¼»áÏò×¢²áµÄ Handler ·¢ËÍ MESSAGE_CACHE_GOT ÏûÏ¢£¬Õû¸öÇëÇó¶ÓÁĞÍê³Éºó½«»áÏò×¢²áµÄ Handler ·¢ËÍ MESSAGE_QUEUE_FINISHED ÏûÏ¢¡£·µ»ØµÄÄ¬ÈÏÖµ¿ÉÍ¨¹ıÖØĞ´ getDefault ·½·¨¸Ä±ä¡£
-     * @param key	ÇëÇóµÄ¹Ø¼ü×Ö
-     * @return ¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û»òÄ¬ÈÏÖµ
-     */
-    public V get(K key) {
-    	SoftReference<V> ref = cache.get(key);
-    	// ²»ÔÚ»º´æÖĞ£¬ÕâÊÇÒ»´ÎĞÂ·ÃÎÊ
-    	if (ref == null) {
-    		offerRequest(key);
-    		return getDefault();
-    	}
-    	// ÕıÔÚ¶ÁÈ¡¶ÓÁĞÖĞ
-    	if (ref == loadingHolder) {
-    		return getDefault();
-    	}
-    	V value = ref.get();
-    	// Ôø¾­»º´æ£¬µ«ÊÇÒÑ¾­±»»ØÊÕ
-    	if (value == null) {
-    		offerRequest(key);
-    		return getDefault();
-    	}
-    	// Ä¿±ê´æÔÚÓÚ»º´æÖĞ
-    	return value;
-    }
-    
-    /**
-     * ³¢ÊÔÖĞ¶Ï¶ÓÁĞÖĞÎ´Íê³ÉµÄÇëÇó¡£µ±Ç°Ö´ĞĞÖĞµÄÇëÇóÍê³Éºó²»»áÏò Handler ²úÉú MESSAGE_CACHE_GOT ÏûÏ¢£¬Í¬Ê±Ò²²»»á²úÉú MESSAGE_QUEUE_FINISHED ÏûÏ¢¡£
-     */
-    public void interrupt() {
-    	thread.interrupt();
-    }
-    
-    /**
-     * ´Ó»º´æÖĞ»ñÈ¡Ò»¸ö¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û¡£Èô¹Ø¼ü×ÖÔÚ»º´æÖĞ²»´æÔÚ»òÒÑ±»»ØÊÕ£¬·µ»Ø null¡£´Ëº¯ÊıÓ¦ÔÚ×ÓÏß³ÌÖĞµ÷ÓÃ¡£
-     * @param key	ÒªÇëÇóµÄ¹Ø¼ü×Ö
-     * @return	¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û£¬»ò null
-     */
-    V getCache(K key) {
-    	SoftReference<V> ref = cache.get(key);
-    	if (ref == null) return null;
-    	return ref.get();
-    }
+	public SoftCache(Handler callback) {
+		this.callback = callback;
+		thread.setDaemon(true);
+		thread.start();
+	}
 
-    /**
-     * ½«¸ø³öµÄ¼üÖµ¶Ô»º´æÆğÀ´¡£´Ëº¯ÊıÓ¦ÔÚ×ÓÏß³ÌÖĞµ÷ÓÃ¡£
-     * @param key	¹Ø¼ü×Ö
-     * @param value		¹Ø¼ü×Ö¶ÔÓ¦µÄ½á¹û
-     * @return ÊäÈëµÄ½á¹û²ÎÊı
-     */
-    V putCache(K key, V value) {
-    	if (value == null) return null;
-    	cache.put(key, new SoftReference<V>(value));
-    	return value;
-    }
-    
-    /**
-     * ÇëÇóÖ¸¶¨µÄ¹Ø¼ü×Ö£¬²¢½«½á¹û»º´æÆğÀ´¡£Èô¹Ø¼ü×ÖÒÑÔÚ»º´æÖĞ£¬Ö±½Ó·µ»Ø½á¹û¡£´Ëº¯ÊıÓ¦ÔÚ×ÓÏß³ÌÖĞµ÷ÓÃ¡£
-     * @param key	ÒªÇëÇóµÄ¹Ø¼ü×Ö
-     * @return ÇëÇó½á¹û
-     */
-    V requestAndCache(K key) {
-    	V value = getCache(key);
-    	// ½á¹û²»´æÔÚ»òÒÑ¾­±»»ØÊÕ
-    	if (value == null) {
-        	return putCache(key, request(key));
-    	}
-    	// Ä¿±ê´æÔÚÓÚ»º´æÖĞ
-    	return value;    	
-    }
-    
-    /**
-     * ½«¸ø¶¨¹Ø¼ü×Ö¼ÓÈëÇëÇó¶ÓÁĞ¡£
-     * @param key	ÒªÇëÇóµÄ¹Ø¼ü×Ö
-     */
-    private void offerRequest(K key) {
-    	cache.put(key, loadingHolder);
-    	queue.offer(key);
-    	if (getMaxQueueLength() > 0 && queue.size() > getMaxQueueLength()) {
-    		cache.remove(queue.remove());
-    	}
-    }
-    
-    /**
-     * »¹Ô­¶ÓÁĞÖĞ¶ÔÏóµÄÇëÇó×´Ì¬£¬È»ºóÇå¿ÕÇëÇó¶ÓÁĞ¡£
-     */
-    private void clearQueue() {
-    	while (true) {
-    		K key = queue.poll();
-    		if (key == null) break;
-    		cache.remove(key);
-    	}
-    }
-    
 	/**
-	 * ÏòÏûÏ¢´¦ÀíÆ÷·¢ËÍÒ»ÌõÏûÏ¢¡£
-	 * @param what	ÏûÏ¢ÀàĞÍ
-	 * @param arg1	ÏûÏ¢²ÎÊı1 (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
-	 * @param arg2	ÏûÏ¢²ÎÊı2 (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
-	 * @param obj	ÏûÏ¢¸½¼Ó¶ÔÏó (ÒÀÏûÏ¢ÀàĞÍ¶ø¶¨)
+	 * å‘ç¼“å­˜è¯·æ±‚ä¸€ä¸ªå…³é”®å­—å¯¹åº”çš„ç»“æœã€‚è‹¥ç»“æœä¸åœ¨ç¼“å­˜ä¸­æˆ–å·²ä¸å¯ç”¨ï¼Œè¿”å› é»˜è®¤å€¼ å¹¶å°†ç»“æœç½®å…¥è¯·æ±‚é˜Ÿåˆ—ï¼›å¦åˆ™ä»ç¼“å­˜ä¸­æŸ¥æ‰¾ç»“æœå¹¶è¿”å›ã€‚æ¯ä¸ªç¼“å­˜è¯·æ±‚å®Œæˆåéƒ½ä¼šå‘æ³¨å†Œçš„ Handler å‘é€ MESSAGE_CACHE_GOT æ¶ˆæ¯ï¼Œæ•´ä¸ªè¯·æ±‚é˜Ÿåˆ—å®Œæˆåå°†ä¼šå‘æ³¨å†Œçš„ Handler å‘é€ MESSAGE_QUEUE_FINISHED æ¶ˆæ¯ã€‚è¿”å›çš„é»˜è®¤å€¼å¯é€šè¿‡é‡å†™ getDefault æ–¹æ³•æ”¹å˜ã€‚
+	 * @param key	è¯·æ±‚çš„å…³é”®å­—
+	 * @return å…³é”®å­—å¯¹åº”çš„ç»“æœæˆ–é»˜è®¤å€¼
+	 */
+	public V get(K key) {
+		SoftReference<V> ref = cache.get(key);
+		// ä¸åœ¨ç¼“å­˜ä¸­ï¼Œè¿™æ˜¯ä¸€æ¬¡æ–°è®¿é—®
+		if (ref == null) {
+			offerRequest(key);
+			return getDefault();
+		}
+		// æ­£åœ¨è¯»å–é˜Ÿåˆ—ä¸­
+		if (ref == loadingHolder) {
+			return getDefault();
+		}
+		V value = ref.get();
+		// æ›¾ç»ç¼“å­˜ï¼Œä½†æ˜¯å·²ç»è¢«å›æ”¶
+		if (value == null) {
+			offerRequest(key);
+			return getDefault();
+		}
+		// ç›®æ ‡å­˜åœ¨äºç¼“å­˜ä¸­
+		return value;
+	}
+
+	/**
+	 * å°è¯•ä¸­æ–­é˜Ÿåˆ—ä¸­æœªå®Œæˆçš„è¯·æ±‚ã€‚å½“å‰æ‰§è¡Œä¸­çš„è¯·æ±‚å®Œæˆåä¸ä¼šå‘ Handler äº§ç”Ÿ MESSAGE_CACHE_GOT æ¶ˆæ¯ï¼ŒåŒæ—¶ä¹Ÿä¸ä¼šäº§ç”Ÿ MESSAGE_QUEUE_FINISHED æ¶ˆæ¯ã€‚
+	 */
+	public void interrupt() {
+		thread.interrupt();
+	}
+
+	/**
+	 * ä»ç¼“å­˜ä¸­è·å–ä¸€ä¸ªå…³é”®å­—å¯¹åº”çš„ç»“æœã€‚è‹¥å…³é”®å­—åœ¨ç¼“å­˜ä¸­ä¸å­˜åœ¨æˆ–å·²è¢«å›æ”¶ï¼Œè¿”å› nullã€‚æ­¤å‡½æ•°åº”åœ¨å­çº¿ç¨‹ä¸­è°ƒç”¨ã€‚
+	 * @param key	è¦è¯·æ±‚çš„å…³é”®å­—
+	 * @return	å…³é”®å­—å¯¹åº”çš„ç»“æœï¼Œæˆ– null
+	 */
+	V getCache(K key) {
+		SoftReference<V> ref = cache.get(key);
+		if (ref == null) return null;
+		return ref.get();
+	}
+
+	/**
+	 * å°†ç»™å‡ºçš„é”®å€¼å¯¹ç¼“å­˜èµ·æ¥ã€‚æ­¤å‡½æ•°åº”åœ¨å­çº¿ç¨‹ä¸­è°ƒç”¨ã€‚
+	 * @param key	å…³é”®å­—
+	 * @param value		å…³é”®å­—å¯¹åº”çš„ç»“æœ
+	 * @return è¾“å…¥çš„ç»“æœå‚æ•°
+	 */
+	V putCache(K key, V value) {
+		if (value == null) return null;
+		cache.put(key, new SoftReference<V>(value));
+		return value;
+	}
+
+	/**
+	 * è¯·æ±‚æŒ‡å®šçš„å…³é”®å­—ï¼Œå¹¶å°†ç»“æœç¼“å­˜èµ·æ¥ã€‚è‹¥å…³é”®å­—å·²åœ¨ç¼“å­˜ä¸­ï¼Œç›´æ¥è¿”å›ç»“æœã€‚æ­¤å‡½æ•°åº”åœ¨å­çº¿ç¨‹ä¸­è°ƒç”¨ã€‚
+	 * @param key	è¦è¯·æ±‚çš„å…³é”®å­—
+	 * @return è¯·æ±‚ç»“æœ
+	 */
+	V requestAndCache(K key) {
+		V value = getCache(key);
+		// ç»“æœä¸å­˜åœ¨æˆ–å·²ç»è¢«å›æ”¶
+		if (value == null) {
+			return putCache(key, request(key));
+		}
+		// ç›®æ ‡å­˜åœ¨äºç¼“å­˜ä¸­
+		return value;
+	}
+
+	/**
+	 * å°†ç»™å®šå…³é”®å­—åŠ å…¥è¯·æ±‚é˜Ÿåˆ—ã€‚
+	 * @param key	è¦è¯·æ±‚çš„å…³é”®å­—
+	 */
+	private void offerRequest(K key) {
+		cache.put(key, loadingHolder);
+		queue.offer(key);
+		if (getMaxQueueLength() > 0 && queue.size() > getMaxQueueLength()) {
+			cache.remove(queue.remove());
+		}
+	}
+
+	/**
+	 * è¿˜åŸé˜Ÿåˆ—ä¸­å¯¹è±¡çš„è¯·æ±‚çŠ¶æ€ï¼Œç„¶åæ¸…ç©ºè¯·æ±‚é˜Ÿåˆ—ã€‚
+	 */
+	private void clearQueue() {
+		while (true) {
+			K key = queue.poll();
+			if (key == null) break;
+			cache.remove(key);
+		}
+	}
+
+	/**
+	 * å‘æ¶ˆæ¯å¤„ç†å™¨å‘é€ä¸€æ¡æ¶ˆæ¯ã€‚
+	 * @param what	æ¶ˆæ¯ç±»å‹
+	 * @param arg1	æ¶ˆæ¯å‚æ•°1 (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
+	 * @param arg2	æ¶ˆæ¯å‚æ•°2 (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
+	 * @param obj	æ¶ˆæ¯é™„åŠ å¯¹è±¡ (ä¾æ¶ˆæ¯ç±»å‹è€Œå®š)
 	 */
 	private void sendHandlerMessage(int what, int arg1, int arg2, Object obj) {
 		if (null != callback) {
@@ -168,27 +167,27 @@ public abstract class SoftCache<K, V> {
 			callback.sendMessage(msg);
 		}
 	}
-	
+
 	/**
-	 * ÖØĞ´´Ëº¯ÊıÒÔ·µ»Ø×Ô¶¨ÒåµÄÄ¬ÈÏÖµ£¬¶ø²»ÊÇÄ¬ÈÏµÄ null¡£
-	 * @return Ìæ´ú null µÄÄ¬ÈÏÖµ
+	 * é‡å†™æ­¤å‡½æ•°ä»¥è¿”å›è‡ªå®šä¹‰çš„é»˜è®¤å€¼ï¼Œè€Œä¸æ˜¯é»˜è®¤çš„ nullã€‚
+	 * @return æ›¿ä»£ null çš„é»˜è®¤å€¼
 	 */
 	V getDefault() {
 		return null;
 	}
-	
+
 	/**
-	 * ÖØĞ´´Ëº¯ÊıÒÔ¾ö¶¨ÇëÇó¶ÓÁĞµÄ×î´ó³¤¶È¡£ÈôÇëÇó¶ÓÁĞ³¬³ö³¤¶È£¬Î»ÓÚ¶ÓÊ×µÄ»áÊ×ÏÈ±»Å×Æú¡£Ä¬ÈÏ¶ÓÁĞ³¤¶ÈÎªÎŞÏŞ(-1)¡£
+	 * é‡å†™æ­¤å‡½æ•°ä»¥å†³å®šè¯·æ±‚é˜Ÿåˆ—çš„æœ€å¤§é•¿åº¦ã€‚è‹¥è¯·æ±‚é˜Ÿåˆ—è¶…å‡ºé•¿åº¦ï¼Œä½äºé˜Ÿé¦–çš„ä¼šé¦–å…ˆè¢«æŠ›å¼ƒã€‚é»˜è®¤é˜Ÿåˆ—é•¿åº¦ä¸ºæ— é™(-1)ã€‚
 	 * @return
 	 */
 	int getMaxQueueLength() {
 		return -1;
 	}
-		
-    /**
-     * ×ÓÏß³ÌÖ÷Ìå£¬×ÓÀà±ØĞëÖØĞ´´Ëº¯Êı£¬Íê³É»ñÈ¡¸ø³ö¹Ø¼ü×ÖµÄÖµ²¢·µ»Ø¡£
-     * @param key	ÇëÇóµÄ¹Ø¼ü×Ö
-     * @return ¹Ø¼ü×Ö¶ÔÓ¦µÄÖµ
-     */
-    abstract V request(K key);
+
+	/**
+	 * å­çº¿ç¨‹ä¸»ä½“ï¼Œå­ç±»å¿…é¡»é‡å†™æ­¤å‡½æ•°ï¼Œå®Œæˆè·å–ç»™å‡ºå…³é”®å­—çš„å€¼å¹¶è¿”å›ã€‚
+	 * @param key	è¯·æ±‚çš„å…³é”®å­—
+	 * @return å…³é”®å­—å¯¹åº”çš„å€¼
+	 */
+	abstract V request(K key);
 }

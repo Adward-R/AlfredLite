@@ -2,11 +2,11 @@ package com.adward.AlfredLite;
 
 import android.app.*;
 import android.content.*;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.content.res.Configuration;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
 import android.media.RingtoneManager;
@@ -25,6 +25,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import com.adward.AlfredLite.bll.FileScannerService;
+import com.adward.AlfredLite.cmd.AppUtil;
 import com.adward.AlfredLite.data.Expression;
 import com.adward.AlfredLite.data.Index;
 import com.adward.AlfredLite.data.Match;
@@ -39,7 +40,7 @@ import java.io.File;
 import java.util.*;
 
 /**
- * Collimator ����������������?�����ʾ�Ȳ�����
+ * 主活动，负责搜索处理，结果显示等操作 *
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2011.0515
  */
@@ -61,6 +62,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	private static final int DIALOG_CMD_CUSTOM = 13; //
 	private static final int DIALOG_CMD_APP = 14; //
 	private static final int DIALOG_CMD_CONTACT = 15; //
+	private static final int DIALOG_APP_OPEN_ERR = 16; //
 
 	private static final int DIALOG_INDEX_OBSOLETE = 100;
 	private static final int DIALOG_FIRST_LAUNCH = 101;
@@ -102,14 +104,15 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	final List<Match> mSearchResult = new ArrayList<Match>();
 	MatchAdapter mListAdapter;
 	SimpleAdapter mAdapter; //adapter for newly implemented functions
-	// ��ǰ״̬����
+	AppUtil appUtil;
+	//当前状态变量
 	Match mSelectedMatch;
 	Expression mExpression;
 	boolean isSearching = false;
 	boolean isPickMode = false;
 	boolean isRangeLocked = false;
 	long startTick = 0;
-	// ��ѡ�����
+	// 首选项参数
 	boolean isTapView = true;
 	boolean isDeletePermitted = false;
 	boolean isReloadWithoutPrompt = false;
@@ -119,7 +122,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	//search key
 	String appCmd;
 	String contactCmd;
-	// ����ؼ�
+	// 界面控件
 	ImageButton mButtonRange;
 	ImageButton mButtonStar;
 	EditText mEditSearch;
@@ -156,6 +159,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
 
 	private void initUtils() {
+		//initDatabase();
         System.out.println("initUtils");
        	Intent intent = new Intent();
        	intent.setClass(SearchActivity.this, SearchActivity.class);
@@ -169,6 +173,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
         mReloadNotification.when = 0;		
     	mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
        	Index.init(getApplicationContext(), mEventHandler);
+		appUtil = new AppUtil(this);
 	}
 
 	private void initViews() {
@@ -237,13 +242,13 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
        	}
        	
        	mEditSearch.addTextChangedListener(new TextWatcher() {
-			public void afterTextChanged(Editable arg0) { }
+			public void afterTextChanged(Editable arg0) {mEditSearch.requestFocus(); }
 			public void beforeTextChanged(CharSequence s, int start, int count, int after) { }
 			public void onTextChanged(CharSequence s, int start, int before, int count) {
 				mExpression.setKey(s.toString());
 				doSearch();
+				mEditSearch.requestFocus();
 			}});
-		mEditSearch.requestFocus();
 	}
 
 	private void updatePreferences() {
@@ -623,6 +628,15 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 							}
 						})
 						.create();
+			case DIALOG_APP_OPEN_ERR:
+				return new AlertDialog.Builder(this).setTitle(R.string.dialog_app_open_err_title)
+						.setIcon(R.drawable.button_warning)
+						.setPositiveButton(R.string.dialog_ok, new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								//TODO get back to title or reload?
+							}
+						}).create();
 	}
 		return super.onCreateDialog(id);
 	}
@@ -722,9 +736,10 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
         System.out.println("onItemClick");
 		if (mode==1){
 			try {
-				openApp(apps.get(position).get("pkgName").toString());
+				appUtil.openApp(apps.get(position).get("pkgName").toString());
 			} catch (PackageManager.NameNotFoundException e) {
-				e.printStackTrace(); //need a dialog
+				showDialog(DIALOG_APP_OPEN_ERR);
+				//e.printStackTrace(); //TODO: need a dialog
 			}
 		}
 		else if(mode==2){
@@ -796,13 +811,13 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 				mode = 1;
 				isSearching = false;
 				if (str.length>1) {
-					apps = getUserApps(GlobalContext.getInstance(),str);
+					apps = appUtil.getUserApps(this,str);
 				}
 				else {
 					String _str[] = {appCmd, ""};
-					apps = getUserApps(GlobalContext.getInstance(),_str);
+					apps = appUtil.getUserApps(this,_str);
 				}
-				mAdapter = new SimpleAdapter(GlobalContext.getInstance(),apps,
+				mAdapter = new SimpleAdapter(this,apps,
 						R.layout.listitem_apps,
 						new String[] {"pkgIcon","pkgLabel","pkgName"},
 						new int[] {R.id.thumbnail,R.id.filename,R.id.filepath});
@@ -883,6 +898,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		mNotificationManager.notify(0, mReloadNotification);
 		Matcher.stopAsyncMatch();
         Index.reloadEntriesAsync();
+        //reloadDatabase();
 	}
 	
 	private void enterPickMode(int type, boolean lock) {
@@ -942,11 +958,11 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 				getString(R.string.dialog_statistics_index_details, Index.length(), new Date(Index.reloadTime()).toLocaleString()) : 
 				getString(R.string.dialog_statistics_index_none)));
 	}
-    
+
 	/**
-	 * �ж�һ�� Intent ��ϵͳ���Ƿ��ж�Ӧ�Ļ���Դ��?
-	 * @param intent	Ҫ�����жϵ� Intent��
-	 * @return	�� Intent �Ƿ���Ա�����
+	 * 判断一个 Intent 在系统中是否有对应的活动可以处理。
+	 * @param intent	要进行判断的 Intent。
+	 * @return	该 Intent 是否可以被处理
 	 */
 	private boolean isIntentAvailable(Intent intent) {
         System.out.println("isIntentAvailable");
@@ -1045,65 +1061,9 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		}
 	}
 
-	public List<Map<String,Object>> getUserApps(Context context,String[] keys) {
-		List<Map<String,Object>> apps = new ArrayList<Map<String,Object>>();
-		PackageManager pManager = context.getPackageManager();
-		//Obtain all installed app info in the cell phone
-		List<PackageInfo> paklist = pManager.getInstalledPackages(0);
-		for (int i = 0; i < paklist.size(); i++) {
-			PackageInfo pak = paklist.get(i);
-			//See if the app is not pre-installed (user installed)
-			if ((pak.applicationInfo.flags & pak.applicationInfo.FLAG_SYSTEM) <= 0) {
-				// customs applications
-				String pkgLabel = pManager.getApplicationLabel(pak.applicationInfo).toString();
-				int flag = 0;
-				for (int j=1;j<keys.length;j++){
-					if (!pkgLabel.toLowerCase().contains(keys[j].toLowerCase())){
-						flag++;
-						break;
-					}
-				}
 
-				if (flag==0) {
-					Map<String, Object> listItem = new HashMap<String, Object>();
-					listItem.put("pkgName", pak.packageName);
-					listItem.put("pkgLabel", pkgLabel);
-					//listItem.put("pkgInstallTime",)
-					//listItem.put("pkgIcon",pManager.getApplicationIcon(pak));
-					listItem.put("pkgIcon", pak.applicationInfo.loadIcon(pManager));
-					apps.add(listItem);
-					//System.out.println(pManager.getApplicationLabel(paklist.get(i).applicationInfo));
-				}
-			}
-		}
-		return apps;
-	}
 
-	private void openApp(String packageName) throws PackageManager.NameNotFoundException {
-		PackageInfo pi = getPackageManager().getPackageInfo(packageName, 0);
-
-		Intent resolveIntent = new Intent(Intent.ACTION_MAIN, null);
-		resolveIntent.addCategory(Intent.CATEGORY_LAUNCHER);
-		resolveIntent.setPackage(pi.packageName);
-
-		List<ResolveInfo> apps = getPackageManager().queryIntentActivities(resolveIntent, 0);
-
-		ResolveInfo ri = apps.iterator().next();
-		if (ri != null ) {
-			String pkgName = ri.activityInfo.packageName;
-			String className = ri.activityInfo.name;
-
-			Intent intent = new Intent(Intent.ACTION_MAIN);
-			intent.addCategory(Intent.CATEGORY_LAUNCHER);
-
-			ComponentName cn = new ComponentName(pkgName, className);
-
-			intent.setComponent(cn);
-			startActivity(intent);
-		}
-	}
-
-	public List<Map<String,Object>> getUserContacts(String[] keys) {
+	/*public List<Map<String,Object>> getUserContacts(String[] keys) {
 		Uri uri = Uri.parse("content://com.android.contacts/contacts");
 		ContentResolver resolver = this.getContentResolver();
 		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
@@ -1135,15 +1095,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 						}
 					}
 					contact.put("contactName",data1);
-				} /*
-                else if ("vnd.android.cursor.item/email_v2".equals(mimeType)) { // Is Email
-                    if (data1==null){
-                        break;
-                    }
-                    if (!TextUtils.isEmpty(data1)) {
-                        contact.put("contactMail",data1);
-                    }
-                } */
+				} 
 				else if ("vnd.android.cursor.item/phone_v2".equals(mimeType)) { // Is Phone Number
 					if (data1==null){
 						break;
@@ -1157,15 +1109,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 					}
 					//System.out.println("~~"+data1+"~~");
 					contact.put("contactPhoneNum",phoneNum);
-				}/*
-                else if ("vnd.android.cursor.item/photo".equals(mimeType)){
-                    if (data1==null){
-                        break;
-                    }
-                    System.out.println("__PHOTO GET");2
-                    contact.put("contactPhoto",data1);
-                }*/
-
+				}
 			}
 			if (flag1==0||flag2==0) {
 				contacts.add(contact);
@@ -1174,5 +1118,102 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		}
 		cursor.close();
 		return contacts;
+	}*/
+
+	public void initDatabase(){
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		System.out.println("~haha~~~");
+		db.execSQL("drop table if exists data");
+		db.execSQL("create table data ( " +
+				  "contactName varchar(20)," +
+				  "contactPhoneNum varchar(20)" +
+				  ")");
+		System.out.println("~~~haha~~~");
+		db.execSQL("create index data1_index on data(contactName,contactPhoneNum)");
+
+		Uri uri = Uri.parse("content://com.android.contacts/contacts");
+		ContentResolver resolver = this.getContentResolver();
+		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
+		
+		while (cursor.moveToNext()) {
+			int contactID = cursor.getInt(0);
+			uri = Uri.parse("content://com.android.contacts/contacts/"
+					+ contactID + "/data");
+			Cursor cursor1 = resolver.query(uri, new String[] { "mimetype",
+					"data1" }, null, null, null);
+			
+			ContentValues cValue = new ContentValues();
+			while (cursor1.moveToNext()){
+				String data1 = cursor1.getString(cursor1.getColumnIndex("data1"));
+				String mimeType = cursor1.getString(cursor1.getColumnIndex("mimetype"));
+				if(mimeType.equals("vnd.android.cursor.item/name"))
+					cValue.put("contactName", data1.toLowerCase());
+				if(mimeType.equals("vnd.android.cursor.item/phone_v2"))
+					cValue.put("contactPhoneNum", data1.toLowerCase());
+			}
+            db.insert("data",null, cValue);
+		}
+		db.close();
 	}
+	
+	
+	public void reloadDatabase(){
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		
+		db.execSQL("drop table data");
+		db.execSQL("create table data ( " +
+				"contactName varchar(20)," +
+				"contactPhoneNum varchar(20)" +
+				")");
+		db.execSQL("create index data1_index on data(contactName,contactPhoneNum)");
+		Uri uri = Uri.parse("content://com.android.contacts/contacts");
+		ContentResolver resolver = this.getContentResolver();
+		Cursor cursor = resolver.query(uri, new String[] { "_id" }, null, null, null);
+		
+		while (cursor.moveToNext()) {
+			int contactID = cursor.getInt(0);
+			uri = Uri.parse("content://com.android.contacts/contacts/"
+					+ contactID + "/data");
+			Cursor cursor1 = resolver.query(uri, new String[] { "mimetype",
+					"data1"}, null, null, null);
+			
+			ContentValues cValue = new ContentValues();
+			while (cursor1.moveToNext()){
+				String data1 = cursor1.getString(cursor1.getColumnIndex("data1"));
+				String mimeType = cursor1.getString(cursor1.getColumnIndex("mimetype"));
+				if(mimeType.equals("vnd.android.cursor.item/name"))
+					cValue.put("contactName", data1.toLowerCase());
+				if(mimeType.equals("vnd.android.cursor.item/phone_v2"))
+					cValue.put("contactPhoneNum", data1.toLowerCase());
+			}
+          db.insert("data",null, cValue);
+		}
+		db.close();
+	}
+	
+	public List<Map<String,Object>> getUserContacts(String[] keys) {
+		SQLiteDatabase db = openOrCreateDatabase("database.db",0,null);
+		List<Map<String,Object>> contacts = new ArrayList<Map<String,Object>>();
+		String TotalKey = "%";
+		for(int j = 1;j < keys.length;j++){
+			TotalKey += keys[j].toLowerCase();
+			TotalKey += "%";
+		}
+        Cursor cursor = db.rawQuery("SELECT contactName,contactPhoneNum FROM data WHERE contactName like "
+                                        +"'"+TotalKey+"'"+" or "+ 
+        		                         "contactPhoneNum like "
+                                        +"'"+TotalKey+"'", null);
+	   
+        if(cursor.moveToFirst()){
+        	for(int i = 0; i < cursor.getCount();i++){
+                 	Map<String,Object> contact = new HashMap<String, Object>();
+        	 	    contact.put("contactName", cursor.getString(cursor.getColumnIndex("contactName")));
+        	 	    contact.put("contactPhoneNum", cursor.getString(cursor.getColumnIndex("contactPhoneNum")));
+                	contacts.add(contact);    
+        	}
+        }
+        db.close();
+        return contacts;
+	 }
 }
+	

@@ -9,12 +9,12 @@ import android.os.Message;
 import com.adward.AlfredLite.util.FileInfo;
 
 /**
- * Ã¿¸ö Matcher ¶ÔÏó±íÊ¾µ¥¸öÆ¥ÅäÅĞ¶ÏÌõ¼ş¡£Matcher Àà²»¿É±»Íâ²¿ÊµÀı»¯£¬ÇëÊ¹ÓÃ±¾ÀàµÄ¾²Ì¬·½·¨½øĞĞÆ¥Åä¡£
+ * æ¯ä¸ª Matcher å¯¹è±¡è¡¨ç¤ºå•ä¸ªåŒ¹é…åˆ¤æ–­æ¡ä»¶ã€‚Matcher ç±»ä¸å¯è¢«å¤–éƒ¨å®ä¾‹åŒ–ï¼Œè¯·ä½¿ç”¨æœ¬ç±»çš„é™æ€æ–¹æ³•è¿›è¡ŒåŒ¹é…ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1023
  */
 public final class Matcher {
-	
+
 	private static final int MESSAGE_FIRST = 0;
 	public static final int MATCHER_START = MESSAGE_FIRST + 1;
 	public static final int MATCHER_ENTRY = MESSAGE_FIRST + 2;
@@ -27,19 +27,19 @@ public final class Matcher {
 	private static final int MATCHER_TYPE_SIZEGT = 4;
 	private static final int MATCHER_TYPE_DATEDURING = 5;
 	private static final int MATCHER_TYPE_MIMETYPE = 6;
-	
+
 	private static Thread sThread;
 	private static Handler sHandler;
 	private static boolean isRegex = false;
 	private static boolean isFuzzy = true;
-	
+
 	private Pattern mPattern;
 	private long mSeparator;
 	private int mType = MATCHER_TYPE_NAME;
 	private boolean isReverse = false;
 	private int mStart;
 	private int mEnd;
-	
+
 	public Matcher(String regex) throws Exception {
 		if (regex.startsWith("!")) {
 			isReverse = true;
@@ -66,102 +66,102 @@ public final class Matcher {
 		} else if (regex.startsWith("mt:")) {
 			mType = MATCHER_TYPE_MIMETYPE;
 			mPattern = toRegex(regex.substring(3, regex.length()));
-		} else { 
+		} else {
 			mType = MATCHER_TYPE_NAME;
 			mPattern = toRegex(regex);
 		}
 	}
 
 	/**
-	 * ÒÀ¾İÆ¥ÅäÌõ¼şÀàĞÍ¶Ô²âÊÔË÷ÒıÌõÄ¿½øĞĞÆ¥Åä¡£
-	 * @param i		ÕıÔÚ²âÊÔµÄË÷ÒıÌõÄ¿
-	 * @return ÊÇ·ñ³É¹¦Æ¥Åä
+	 * ä¾æ®åŒ¹é…æ¡ä»¶ç±»å‹å¯¹æµ‹è¯•ç´¢å¼•æ¡ç›®è¿›è¡ŒåŒ¹é…ã€‚
+	 * @param i		æ­£åœ¨æµ‹è¯•çš„ç´¢å¼•æ¡ç›®
+	 * @return æ˜¯å¦æˆåŠŸåŒ¹é…
 	 */
 	private boolean match(int i) {
 		java.util.regex.Matcher matcher;
 		switch (mType) {
-		case MATCHER_TYPE_NAME:
-			matcher = mPattern.matcher(Index.getName(i));
-			if (matcher.find()) {
-				mStart = matcher.start();
-				mEnd = matcher.end();
-				return !isReverse;
-			} else if (null != Index.getNameAlpha(i)) {
-				matcher = mPattern.matcher(Index.getNameAlpha(i));
+			case MATCHER_TYPE_NAME:
+				matcher = mPattern.matcher(Index.getName(i));
 				if (matcher.find()) {
 					mStart = matcher.start();
 					mEnd = matcher.end();
 					return !isReverse;
+				} else if (null != Index.getNameAlpha(i)) {
+					matcher = mPattern.matcher(Index.getNameAlpha(i));
+					if (matcher.find()) {
+						mStart = matcher.start();
+						mEnd = matcher.end();
+						return !isReverse;
+					}
 				}
-			}
-			break;
-		case MATCHER_TYPE_FOLDER:
-			matcher = mPattern.matcher(Index.getPath(i));
-			if (matcher.find()) {
-				return !isReverse;
-			} else if (null != Index.getPath(i)) {
-				matcher = mPattern.matcher(Index.getPathAlpha(i));
+				break;
+			case MATCHER_TYPE_FOLDER:
+				matcher = mPattern.matcher(Index.getPath(i));
+				if (matcher.find()) {
+					return !isReverse;
+				} else if (null != Index.getPath(i)) {
+					matcher = mPattern.matcher(Index.getPathAlpha(i));
+					if (matcher.find()) {
+						return !isReverse;
+					}
+				}
+				break;
+			case MATCHER_TYPE_SIZELT:
+				if (Index.getSize(i) < mSeparator) return !isReverse;
+				break;
+			case MATCHER_TYPE_SIZEGT:
+				if (Index.getSize(i) > mSeparator) return !isReverse;
+				break;
+			case MATCHER_TYPE_DATEDURING:
+				if (Index.getTime(i) > System.currentTimeMillis() - mSeparator) return !isReverse;
+				break;
+			case MATCHER_TYPE_MIMETYPE:
+				matcher = mPattern.matcher(FileInfo.mimeType(Index.getName(i)));
 				if (matcher.find()) {
 					return !isReverse;
 				}
-			}
-			break;
-		case MATCHER_TYPE_SIZELT:
-			if (Index.getSize(i) < mSeparator) return !isReverse;
-			break;
-		case MATCHER_TYPE_SIZEGT:
-			if (Index.getSize(i) > mSeparator) return !isReverse;
-			break;
-		case MATCHER_TYPE_DATEDURING:
-			if (Index.getTime(i) > System.currentTimeMillis() - mSeparator) return !isReverse;
-			break;
-		case MATCHER_TYPE_MIMETYPE:
-			matcher = mPattern.matcher(FileInfo.mimeType(Index.getName(i)));
-			if (matcher.find()) {
-				return !isReverse;
-			}
-			break;
+				break;
 		}
 		return isReverse;
 	}
-	
+
 	/**
-	 * »ñÈ¡´ËÆ¥Åä½á¹ûµÄÆğÊ¼Î»ÖÃ¡£
-	 * @return	ÆğÊ¼Î»ÖÃË÷Òı
+	 * è·å–æ­¤åŒ¹é…ç»“æœçš„èµ·å§‹ä½ç½®ã€‚
+	 * @return	èµ·å§‹ä½ç½®ç´¢å¼•
 	 */
 	public int start() { return mStart; }
 	/**
-	 * »ñÈ¡´ËÆ¥½á¹ûÅäµÄ½áÊøÎ»ÖÃ¡£
-	 * @return ½áÊøÎ»ÖÃË÷Òı
+	 * è·å–æ­¤åŒ¹ç»“æœé…çš„ç»“æŸä½ç½®ã€‚
+	 * @return ç»“æŸä½ç½®ç´¢å¼•
 	 */
 	public int end() { return mEnd; }
 	/**
-	 * »ñÈ¡´ËÆ¥ÅäÆ÷µÄÀàĞÍ¡£
-	 * @return Æ¥ÅäÆ÷ÀàĞÍ
+	 * è·å–æ­¤åŒ¹é…å™¨çš„ç±»å‹ã€‚
+	 * @return åŒ¹é…å™¨ç±»å‹
 	 */
 	public int type() { return mType; }
 	/**
-	 * »ñÈ¡´ËÆ¥ÅäÆ÷ÊÇ·ñ¾­¹ıÈ¡·´ÔËËã¡£
-	 * @return ÊÇ·ñÈ¡·´
+	 * è·å–æ­¤åŒ¹é…å™¨æ˜¯å¦ç»è¿‡å–åè¿ç®—ã€‚
+	 * @return æ˜¯å¦å–å
 	 */
 	public boolean isReverse() { return isReverse; }
-	
+
 	/**
-	 * Ê¹ÓÃ¸ø¶¨µÄ±í´ïÊ½ÔÚÎÄ¼şË÷ÒıÖĞ½øĞĞÒì²½Æ¥Åä£¬ÆÚ¼ä²úÉúµÄÈÎºÎÏûÏ¢¶¼½«·¢ËÍµ½ÏûÏ¢´¦ÀíÆ÷¡£Èç¹ûÒÑÓĞÒ»´ÎÆ¥Åä¹ı³ÌÔÚ½øĞĞÖĞ£¬½«È¡ÏûÏÈÇ°µÄÆ¥Åä¹ı³Ì£¬È»ºóÆô¶¯ĞÂµÄÆ¥Åä¡£
-	 * @param expression	Æ¥Åä±í´ïÊ½
+	 * ä½¿ç”¨ç»™å®šçš„è¡¨è¾¾å¼åœ¨æ–‡ä»¶ç´¢å¼•ä¸­è¿›è¡Œå¼‚æ­¥åŒ¹é…ï¼ŒæœŸé—´äº§ç”Ÿçš„ä»»ä½•æ¶ˆæ¯éƒ½å°†å‘é€åˆ°æ¶ˆæ¯å¤„ç†å™¨ã€‚å¦‚æœå·²æœ‰ä¸€æ¬¡åŒ¹é…è¿‡ç¨‹åœ¨è¿›è¡Œä¸­ï¼Œå°†å–æ¶ˆå…ˆå‰çš„åŒ¹é…è¿‡ç¨‹ï¼Œç„¶åå¯åŠ¨æ–°çš„åŒ¹é…ã€‚
+	 * @param expression	åŒ¹é…è¡¨è¾¾å¼
 	 */
 	public static void matchAsync(final Matcher[] matchers) {
 		stopAsyncMatch();
 		sThread = new Thread(new Runnable() {
-        	public void run() {
-        		MatchThread(matchers);
-            }
-        });
+			public void run() {
+				MatchThread(matchers);
+			}
+		});
 		sThread.start();
 	}
-	
+
 	/**
-	 * Èç¹ûÒì²½Æ¥ÅäÕıÔÚ½øĞĞ£¬·¢³öÖÕÖ¹ĞÅºÅ²¢µÈ´ıÆäÖÕÖ¹¡£
+	 * å¦‚æœå¼‚æ­¥åŒ¹é…æ­£åœ¨è¿›è¡Œï¼Œå‘å‡ºç»ˆæ­¢ä¿¡å·å¹¶ç­‰å¾…å…¶ç»ˆæ­¢ã€‚
 	 */
 	public static void stopAsyncMatch() {
 		if (null != sThread && sThread.isAlive()) {
@@ -173,10 +173,10 @@ public final class Matcher {
 			}
 		}
 	}
-	
+
 	/**
-	 * ÓÉ matchAsync µ÷ÓÃµÄÆ¥ÅäÒì²½Ïß³Ì¡£Æ¥Åä¹ı³ÌÖĞ²úÉúµÄÈÎºÎÏûÏ¢¶¼½«·¢ËÍµ½×¢²áµÄÏûÏ¢´¦ÀíÆ÷¡£
-	 * @param expression	Æ¥Åä±í´ïÊ½
+	 * ç”± matchAsync è°ƒç”¨çš„åŒ¹é…å¼‚æ­¥çº¿ç¨‹ã€‚åŒ¹é…è¿‡ç¨‹ä¸­äº§ç”Ÿçš„ä»»ä½•æ¶ˆæ¯éƒ½å°†å‘é€åˆ°æ³¨å†Œçš„æ¶ˆæ¯å¤„ç†å™¨ã€‚
+	 * @param expression	åŒ¹é…è¡¨è¾¾å¼
 	 */
 	private static void MatchThread(Matcher[] matchers) {
 		if (null == matchers) {
@@ -195,11 +195,11 @@ public final class Matcher {
 			sHandler.sendEmptyMessage(MATCHER_FINISHED);
 		}
 	}
-	
+
 	/**
-	 * ½«×Ö·û´®ĞÎÊ½µÄ³£¹æÍ¨Åä·û±í´ï»òÕıÔò±í´ï·­ÒëÎªÕıÔò±í´ïÊ½£¬²¢¸ù¾İÊ×Ñ¡Ïî½øĞĞÒ»Ğ©±ØÒªµÄ´¦Àí¡£
-	 * @param key	ÊäÈëµÄ±í´ïÊ½
-	 * @return	×ª»»ºóµÄÕıÔò±í´ïÊ½
+	 * å°†å­—ç¬¦ä¸²å½¢å¼çš„å¸¸è§„é€šé…ç¬¦è¡¨è¾¾æˆ–æ­£åˆ™è¡¨è¾¾ç¿»è¯‘ä¸ºæ­£åˆ™è¡¨è¾¾å¼ï¼Œå¹¶æ ¹æ®é¦–é€‰é¡¹è¿›è¡Œä¸€äº›å¿…è¦çš„å¤„ç†ã€‚
+	 * @param key	è¾“å…¥çš„è¡¨è¾¾å¼
+	 * @return	è½¬æ¢åçš„æ­£åˆ™è¡¨è¾¾å¼
 	 */
 	private static Pattern toRegex(String key) {
 		Pattern pattern;
@@ -209,7 +209,7 @@ public final class Matcher {
 				patternKey = key.substring(3, key.length());
 			} else {
 				patternKey = key;
-			}				
+			}
 			if (!isFuzzy && !patternKey.startsWith("^")) {
 				pattern = Pattern.compile("^" + patternKey, Pattern.CASE_INSENSITIVE);
 			} else {
@@ -217,18 +217,18 @@ public final class Matcher {
 			}
 		} else {
 			patternKey = key
-				.replace("\\", "\\u005C")
-				.replace(".", "\\u002E")
-				.replace("$", "\\u0024")
-				.replace("^", "\\u005E")
-				.replace("{", "\\u007B")
-				.replace("[", "\\u005B")
-				.replace("(", "\\u0028")
-				//.replace("|", "\\u007C")
-				.replace(")", "\\u0029")
-				.replace("+", "\\u002B")
-				.replace("*", "[\\s\\S]*")
-				.replace("?", "[\\s\\S]");
+					.replace("\\", "\\u005C")
+					.replace(".", "\\u002E")
+					.replace("$", "\\u0024")
+					.replace("^", "\\u005E")
+					.replace("{", "\\u007B")
+					.replace("[", "\\u005B")
+					.replace("(", "\\u0028")
+							//.replace("|", "\\u007C")
+					.replace(")", "\\u0029")
+					.replace("+", "\\u002B")
+					.replace("*", "[\\s\\S]*")
+					.replace("?", "[\\s\\S]");
 			if (isFuzzy) {
 				pattern = Pattern.compile(patternKey, Pattern.CASE_INSENSITIVE);
 			} else {
@@ -237,11 +237,11 @@ public final class Matcher {
 		}
 		return pattern;
 	}
-	
+
 	/**
-	 * ½«Ò»¸ö³É¹¦µÄÆ¥ÅäÏî°ü×°ºó·¢ËÍ¸øÏûÏ¢´¦ÀíÆ÷¡£
-	 * @param entry		Æ¥Åä³É¹¦µÄ Entry ÊµÀı
-	 * @param matchers	½øĞĞ´Ë´ÎÆ¥ÅäµÄ Matcher Êı×é
+	 * å°†ä¸€ä¸ªæˆåŠŸçš„åŒ¹é…é¡¹åŒ…è£…åå‘é€ç»™æ¶ˆæ¯å¤„ç†å™¨ã€‚
+	 * @param entry		åŒ¹é…æˆåŠŸçš„ Entry å®ä¾‹
+	 * @param matchers	è¿›è¡Œæ­¤æ¬¡åŒ¹é…çš„ Matcher æ•°ç»„
 	 */
 	private static void sendMatchEntry(int index, Matcher[] matchers) {
 		Match match = new Match(index);
@@ -253,16 +253,16 @@ public final class Matcher {
 		msg.obj = match;
 		sHandler.sendMessage(msg);
 	}
-	
+
 	/**
-	 * ³õÊ¼»¯Æ¥ÅäÌõ¼şÓë³ÌĞòµÄ¹ØÁª¡£Ö÷³ÌĞò¸Ä±äÊ×Ñ¡ÏîºóÓ¦ÔÙ´Îµ÷ÓÃ´Ëº¯Êı¡£
-	 * @param prefs		³ÌĞòµÄÊ×Ñ¡Ïî¶ÔÏó£¬´ÓÕâÀï»ñµÃË÷ÒıÉèÖÃ
-	 * @param handler	Ö÷Ïß³ÌµÄÏûÏ¢´¦ÀíÆ÷£¬Æ¥ÅäÏß³Ì²úÉúµÄÏà¹ØÏûÏ¢½«·¢Íù´ËÏûÏ¢´¦ÀíÆ÷
+	 * åˆå§‹åŒ–åŒ¹é…æ¡ä»¶ä¸ç¨‹åºçš„å…³è”ã€‚ä¸»ç¨‹åºæ”¹å˜é¦–é€‰é¡¹ååº”å†æ¬¡è°ƒç”¨æ­¤å‡½æ•°ã€‚
+	 * @param prefs		ç¨‹åºçš„é¦–é€‰é¡¹å¯¹è±¡ï¼Œä»è¿™é‡Œè·å¾—ç´¢å¼•è®¾ç½®
+	 * @param handler	ä¸»çº¿ç¨‹çš„æ¶ˆæ¯å¤„ç†å™¨ï¼ŒåŒ¹é…çº¿ç¨‹äº§ç”Ÿçš„ç›¸å…³æ¶ˆæ¯å°†å‘å¾€æ­¤æ¶ˆæ¯å¤„ç†å™¨
 	 */
 	public static void init(SharedPreferences prefs, Handler handler) {
 		isRegex = prefs.getBoolean("matching_regex", false);
 		isFuzzy = prefs.getBoolean("matching_fuzzy", true);
 		sHandler = handler;
 	}
-	
+
 }

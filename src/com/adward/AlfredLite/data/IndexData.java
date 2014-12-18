@@ -1,18 +1,18 @@
 package com.adward.AlfredLite.data;
 
+import com.adward.AlfredLite.util.Unicode2Alpha;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import com.adward.AlfredLite.util.Unicode2Alpha;
-
 /**
- * ´æ´¢ÎÄ¼şË÷Òı¼°Ïà¹ØĞÅÏ¢µÄÊı¾İ½á¹¹£¬ÊµÏÖË÷ÒıµÄĞòÁĞ»¯¼°·´ĞòÁĞ»¯¡£
+ * å­˜å‚¨æ–‡ä»¶ç´¢å¼•åŠç›¸å…³ä¿¡æ¯çš„æ•°æ®ç»“æ„ï¼Œå®ç°ç´¢å¼•çš„åºåˆ—åŒ–åŠååºåˆ—åŒ–ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1025
  */
 final class IndexData {
-	
+
 	private static final int version = 1;
 	String[] name;
 	String[] path;
@@ -22,7 +22,7 @@ final class IndexData {
 	long[] time;
 	long indexTime;
 	long availableSpace;
-	
+
 	int length() {
 		if (name == null) {
 			return 0;
@@ -30,7 +30,7 @@ final class IndexData {
 			return name.length;
 		}
 	}
-	
+
 	void read(DataInputStream in) throws IOException, ClassNotFoundException, DifferentVersionException {
 		String lastPath = null;
 		int ver = in.readInt();
@@ -58,7 +58,7 @@ final class IndexData {
 			time[i] = in.readLong();
 		}
 	}
-	
+
 	void write(DataOutputStream out) throws IOException {
 		String lastPath = null;
 		out.writeInt(version);
@@ -78,7 +78,7 @@ final class IndexData {
 			out.writeLong(time[i]);
 		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	public class DifferentVersionException extends Exception {
 		public DifferentVersionException() {

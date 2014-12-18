@@ -6,12 +6,12 @@ import java.util.Comparator;
 import com.adward.AlfredLite.util.FileInfo;
 
 /***
- * °üº¬Õë¶ÔÆ¥Åä½á¹û¼¯µÄ¾²Ì¬ÅÅĞò·½·¨¡£
+ * åŒ…å«é’ˆå¯¹åŒ¹é…ç»“æœé›†çš„é™æ€æ’åºæ–¹æ³•ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1105
  */
 public final class Sorter {
-	
+
 	public static final int SORT_NAME = 0;
 	public static final int SORT_DATE = 1;
 	public static final int SORT_MIMETYPE = 2;
@@ -23,77 +23,77 @@ public final class Sorter {
 	public static final int SORT_NONE = 8;
 
 	private Sorter() { }
-	
+
 	/**
-	 * ¶ÔÆ¥Åä½á¹û¼¯°´Ö¸¶¨µÄÅÅĞò·½Ê½½øĞĞÅÅĞò¡£
-	 * @param list		ÒªÅÅĞòµÄÆ¥Åä½á¹û¼¯
-	 * @param sortMode	½øĞĞÅÅĞòµÄÒÀ¾İ
-	 * @param reverse	ÈôÎª false£¬½øĞĞÉıĞòÅÅĞò£¬·´Ö®ÔòÎª½µĞòÅÅĞò
+	 * å¯¹åŒ¹é…ç»“æœé›†æŒ‰æŒ‡å®šçš„æ’åºæ–¹å¼è¿›è¡Œæ’åºã€‚
+	 * @param list		è¦æ’åºçš„åŒ¹é…ç»“æœé›†
+	 * @param sortMode	è¿›è¡Œæ’åºçš„ä¾æ®
+	 * @param reverse	è‹¥ä¸º falseï¼Œè¿›è¡Œå‡åºæ’åºï¼Œåä¹‹åˆ™ä¸ºé™åºæ’åº
 	 */
 	public static Comparator<Match> getSorter(int sortMode, boolean reverse) {
 		Comparator<Match> comparator = null;
 		switch (sortMode) {
-		case SORT_NONE:
-			break;
-		case SORT_DATE:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					if (match1.time() > match2.time()) return 1;
-					if (match1.time() < match2.time()) return -1;
-					return 0;
-				}};
-			break;
-		case SORT_NAME:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					return match1.name().compareTo(match2.name());
-				}};
-			break;
-		case SORT_NAME_ALPHA:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
+			case SORT_NONE:
+				break;
+			case SORT_DATE:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						if (match1.time() > match2.time()) return 1;
+						if (match1.time() < match2.time()) return -1;
+						return 0;
+					}};
+				break;
+			case SORT_NAME:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						return match1.name().compareTo(match2.name());
+					}};
+				break;
+			case SORT_NAME_ALPHA:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
 //					return Unicode2Alpha.toPureAlpha(match1.name()).compareTo(Unicode2Alpha.toPureAlpha(match2.name()));
-					return match1.nameAlpha().compareTo(match2.nameAlpha());
-				}};
-			break;
-		case SORT_EXTENSION:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					return FileInfo.extension(match1.name()).compareTo(FileInfo.extension(match2.name()));
-				}};
-			break;
-		case SORT_MIMETYPE:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					return FileInfo.mimeType(match1.name()).compareTo(FileInfo.mimeType(match2.name()));
-				}};
-			break;
-		case SORT_PARENT:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					int res = match1.path().compareTo(match2.path());
-					if (res == 0) res = match1.name().compareTo(match2.name());
-					return res;
-				}};
-			break;
-		case SORT_PARENT_ALPHA:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
+						return match1.nameAlpha().compareTo(match2.nameAlpha());
+					}};
+				break;
+			case SORT_EXTENSION:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						return FileInfo.extension(match1.name()).compareTo(FileInfo.extension(match2.name()));
+					}};
+				break;
+			case SORT_MIMETYPE:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						return FileInfo.mimeType(match1.name()).compareTo(FileInfo.mimeType(match2.name()));
+					}};
+				break;
+			case SORT_PARENT:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						int res = match1.path().compareTo(match2.path());
+						if (res == 0) res = match1.name().compareTo(match2.name());
+						return res;
+					}};
+				break;
+			case SORT_PARENT_ALPHA:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
 //					int res = Unicode2Alpha.toPureAlpha(match1.path()).compareTo(Unicode2Alpha.toPureAlpha(match2.path()));
 //					if (res == 0) res = Unicode2Alpha.toPureAlpha(match1.path()).compareTo(Unicode2Alpha.toPureAlpha(match2.path()));
-					int res = match1.pathAlpha().compareTo(match2.pathAlpha());
-					if (res == 0) res = match1.nameAlpha().compareTo(match2.nameAlpha());
-					return res;
-				}};
-			break;
-		case SORT_SIZE:
-			comparator = new Comparator<Match>() {
-				public int compare(Match match1, Match match2) {
-					if (match1.size() > match2.size()) return 1;
-					if (match1.size() < match2.size()) return -1;
-					return 0;
-				}};
-			break;
+						int res = match1.pathAlpha().compareTo(match2.pathAlpha());
+						if (res == 0) res = match1.nameAlpha().compareTo(match2.nameAlpha());
+						return res;
+					}};
+				break;
+			case SORT_SIZE:
+				comparator = new Comparator<Match>() {
+					public int compare(Match match1, Match match2) {
+						if (match1.size() > match2.size()) return 1;
+						if (match1.size() < match2.size()) return -1;
+						return 0;
+					}};
+				break;
 		}
 		if (comparator != null) {
 			if (reverse) {

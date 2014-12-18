@@ -1,18 +1,17 @@
 package com.adward.AlfredLite.bll;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Stack;
-
 import android.app.Service;
 import android.content.Intent;
 import android.os.Environment;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.adward.AlfredLite.dal.DBOperation;
 import com.adward.AlfredLite.model.BaseTag;
 import com.adward.AlfredLite.util.RecursiveFileObserver;
+
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Stack;
 
 public class FileScannerService extends Service {
 	private RealtimeScanner mScanner;
@@ -42,7 +41,7 @@ public class FileScannerService extends Service {
 	public IBinder onBind(Intent intent) {
 		return null;
 	}
-	
+
 	public void scanFile(File file) {
 		if (file.exists()) {
 			Log.e("SCANFILE", file.getPath());
@@ -62,16 +61,16 @@ public class FileScannerService extends Service {
 	}
 	
 	/**
-	 * ÍêÕûÉ¨ÃèSD¿¨£¬ÖØ½¨ÎÄ¼şË÷Òı¡£
+	 * å®Œæ•´æ‰«æSDå¡å¹¶é‡å»ºç´¢å¼•
 	 */
 	public void scanAll() {
 		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			return;
 		}
-		// ×¼±¸³õÊ¼Õ»
+		//å‡†å¤‡åˆå§‹æ ˆ
 		Stack<String> stack = new Stack<String>();
 		stack.push(Environment.getExternalStorageDirectory().getPath());
-		// ¿ªÊ¼ÎÄ¼ş±éÀú
+		//å¼€å§‹æ–‡ä»¶éå†
 		while (!stack.isEmpty()) {
 			String parent = stack.pop();
 			String parentAlpha = null;
@@ -91,11 +90,11 @@ public class FileScannerService extends Service {
 			}
 		}
     }
-	
+
 	/**
-	 * ÅĞ¶ÏÒ»¸öÎÄ¼ş¼ĞÊÇ·ñÓ¦¸ÃÑ¹Èë´ıË÷ÒıÕ»¡£
-	 * @param file	Ö¸ÏòÎÄ¼ş¼ĞµÄÎÄ¼ş¶ÔÏó
-	 * @return ÊÇ·ñÓ¦¸ÃÑ¹Õ»
+	 * åˆ¤æ–­ä¸€ä¸ªæ–‡ä»¶å¤¹æ˜¯å¦åº”è¯¥å‹å…¥å¾…ç´¢å¼•æ ˆã€‚
+	 * @param file	æŒ‡å‘æ–‡ä»¶å¤¹çš„æ–‡ä»¶å¯¹è±¡
+	 * @return æ˜¯å¦åº”è¯¥å‹æ ˆ
 	 */
 	private boolean isQualifiedDirectory(File file) {
 		if (file.getName().equals(".") || file.getName().equals("..")) return false;
@@ -105,11 +104,11 @@ public class FileScannerService extends Service {
 //		if (new File(file.getPath(), ".nomedia").exists()) return false;
 		return true;
 	}
-	
+
 	/**
-	 * ÅĞ¶ÏÒ»¸öÎÄ¼şÊÇ·ñÓ¦¸Ã½øĞĞË÷Òı¡£
-	 * @param file	Ö¸ÏòÎÄ¼şµÄÎÄ¼ş¶ÔÏó
-	 * @return ÊÇ·ñÓ¦¸ÃË÷Òı
+	 * åˆ¤æ–­ä¸€ä¸ªæ–‡ä»¶æ˜¯å¦åº”è¯¥è¿›è¡Œç´¢å¼•ã€‚
+	 * @param file	æŒ‡å‘æ–‡ä»¶çš„æ–‡ä»¶å¯¹è±¡
+	 * @return æ˜¯å¦åº”è¯¥ç´¢å¼•
 	 */
 	private boolean isQualifiedFile(File file) {
 //		if (!isIndexDotPrefix && file.getName().startsWith(".")) return false;

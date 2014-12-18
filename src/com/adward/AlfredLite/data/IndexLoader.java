@@ -1,32 +1,25 @@
 package com.adward.AlfredLite.data;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Stack;
-
 import android.content.SharedPreferences;
 import android.os.Environment;
 import android.os.StatFs;
-
 import com.adward.AlfredLite.data.IndexData.DifferentVersionException;
 import com.adward.AlfredLite.util.FileInfo;
 import com.adward.AlfredLite.util.Unicode2Alpha;
 
+import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Stack;
+
 /**
- * °üº¬ÎÄ¼şË÷ÒıµÄÖØ½¨¡¢ĞòÁĞ»¯¼°·´ĞòÁĞ»¯µÄ·½·¨¡£
+ * åŒ…å«æ–‡ä»¶ç´¢å¼•çš„é‡å»ºã€åºåˆ—åŒ–åŠååºåˆ—åŒ–çš„æ–¹æ³•ã€‚
  * @author		uestc.Mobius <mobius@toraleap.com>
  * @version	2010.1025
  */
 final class IndexLoader {
-	
-	// Ê×Ñ¡Ïî²ÎÊı
+
+	// é¦–é€‰é¡¹å‚æ•°
 	private boolean isIndexHidden = false;
 	private boolean isIndexSystem = false;
 	private boolean isIndexDotPrefix = false;
@@ -34,7 +27,7 @@ final class IndexLoader {
 	private boolean isIndexAllType = false;
 
 	private final HashSet<String> blackList = new HashSet<String>();
-	
+
 	public IndexLoader(SharedPreferences prefs) {
 		isIndexHidden = prefs.getBoolean("index_hidden", false);
 		isIndexSystem = prefs.getBoolean("index_system", false);
@@ -43,20 +36,20 @@ final class IndexLoader {
 		isIndexAllType = prefs.getBoolean("index_alltype", false);
 		getBlacklist();
 	}
-	
+
 	/**
-	 * ¸ù¾İ¹¹Ôìº¯Êı»ñÈ¡µÄÉèÖÃ£¬É¨ÃèSD¿¨£¬ÖØ½¨ÎÄ¼şË÷Òı¡£
-	 * @return ½¨Á¢µÄË÷Òı¶ÔÏó
-	 * @throws NoSDCardException Î´¼ì²âµ½¹ÒÔØµÄSD¿¨
+	 * æ ¹æ®æ„é€ å‡½æ•°è·å–çš„è®¾ç½®ï¼Œæ‰«æSDå¡ï¼Œé‡å»ºæ–‡ä»¶ç´¢å¼•ã€‚
+	 * @return å»ºç«‹çš„ç´¢å¼•å¯¹è±¡
+	 * @throws NoSDCardException æœªæ£€æµ‹åˆ°æŒ‚è½½çš„SDå¡
 	 */
 	public IndexData reload() throws NoSDCardException {
 		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			throw new NoSDCardException();
 		}
-		// ×¼±¸³õÊ¼Õ»
+		// å‡†å¤‡åˆå§‹æ ˆ
 		Stack<String> stack = new Stack<String>();
 		stack.push(Environment.getExternalStorageDirectory().getPath());
-		// ×¼±¸»º´æÁĞ±í
+		// å‡†å¤‡ç¼“å­˜åˆ—è¡¨
 		IndexData data = new IndexData();
 		ArrayList<String> lName = new ArrayList<String>();
 		ArrayList<String> lPath = new ArrayList<String>();
@@ -64,7 +57,7 @@ final class IndexLoader {
 		ArrayList<String> lPathAlpha = new ArrayList<String>();
 		ArrayList<Long> lSize = new ArrayList<Long>();
 		ArrayList<Long> lTime = new ArrayList<Long>();
-		// ¿ªÊ¼ÎÄ¼ş±éÀú
+		// å¼€å§‹æ–‡ä»¶éå†
 		while (!stack.isEmpty()) {
 			String parent = stack.pop();
 			String parentAlpha = null;
@@ -108,12 +101,12 @@ final class IndexLoader {
 		data.time = new long[length];
 		for (int i = 0; i < length; i++) data.time[i] = lTime.get(i).longValue();
 		return data;
-    }
-	
+	}
+
 	/**
-	 * ĞòÁĞ»¯Ë÷Òı¶ÔÏó¡£
-	 * @param data	ÒªĞòÁĞ»¯µÄ¶ÔÏó
-	 * @throws SerializingException ĞòÁĞ»¯Ê§°Ü
+	 * åºåˆ—åŒ–ç´¢å¼•å¯¹è±¡ã€‚
+	 * @param data	è¦åºåˆ—åŒ–çš„å¯¹è±¡
+	 * @throws SerializingException åºåˆ—åŒ–å¤±è´¥
 	 */
 	public static void serialize(IndexData data) throws SerializingException {
 		File f;
@@ -137,15 +130,15 @@ final class IndexLoader {
 				}
 		}
 	}
-	
+
 	/**
-	 * ·´ĞòÁĞ»¯Ë÷Òı¶ÔÏó¡£
-	 * @return Èô³É¹¦£¬·µ»Ø·´ĞòÁĞ»¯µÄË÷Òı¶ÔÏó£»·ñÔò·µ»Ønull¡£
-	 * @throws NoSDCardException Î´¼ì²âµ½¹ÒÔØµÄSD¿¨
-	 * @throws DeserializingException Ë÷ÒıÎÄ¼ş¸ñÊ½²»ÕıÈ·
-	 * @throws DifferentVersionException Ë÷ÒıÎÄ¼ş°æ±¾Òì³£
-	 * @throws ClassNotFoundException ·´ĞòÁĞ»¯Òì³£
-	 * @throws IOException Ë÷ÒıÎÄ¼ş¶ÁÈ¡Òì³£
+	 * ååºåˆ—åŒ–ç´¢å¼•å¯¹è±¡ã€‚
+	 * @return è‹¥æˆåŠŸï¼Œè¿”å›ååºåˆ—åŒ–çš„ç´¢å¼•å¯¹è±¡ï¼›å¦åˆ™è¿”å›nullã€‚
+	 * @throws NoSDCardException æœªæ£€æµ‹åˆ°æŒ‚è½½çš„SDå¡
+	 * @throws DeserializingException ç´¢å¼•æ–‡ä»¶æ ¼å¼ä¸æ­£ç¡®
+	 * @throws DifferentVersionException ç´¢å¼•æ–‡ä»¶ç‰ˆæœ¬å¼‚å¸¸
+	 * @throws ClassNotFoundException ååºåˆ—åŒ–å¼‚å¸¸
+	 * @throws IOException ç´¢å¼•æ–‡ä»¶è¯»å–å¼‚å¸¸
 	 */
 	public static IndexData deserialize() throws NoSDCardException, DeserializingException, IOException, ClassNotFoundException, DifferentVersionException {
 		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -178,23 +171,23 @@ final class IndexLoader {
 				}
 		}
 	}
-	
+
 	/**
-	 * ×¼±¸ÏµÍ³ºÚÃûµ¥ÁĞ±í¡£
+	 * å‡†å¤‡ç³»ç»Ÿé»‘åå•åˆ—è¡¨ã€‚
 	 */
 	private void getBlacklist() {
 		String root = Environment.getExternalStorageDirectory().getPath();
 		blackList.add(root + "/lost.dir");
 		blackList.add(root + "/android");
-		blackList.add(root + "/brut.googlemaps");		
-		blackList.add(root + "/navione");		
-		blackList.add(root + "/picstore");		
+		blackList.add(root + "/brut.googlemaps");
+		blackList.add(root + "/navione");
+		blackList.add(root + "/picstore");
 	}
-	
+
 	/**
-	 * ÅĞ¶ÏÒ»¸öÎÄ¼ş¼ĞÊÇ·ñÓ¦¸ÃÑ¹Èë´ıË÷ÒıÕ»¡£
-	 * @param file	Ö¸ÏòÎÄ¼ş¼ĞµÄÎÄ¼ş¶ÔÏó
-	 * @return ÊÇ·ñÓ¦¸ÃÑ¹Õ»
+	 * åˆ¤æ–­ä¸€ä¸ªæ–‡ä»¶å¤¹æ˜¯å¦åº”è¯¥å‹å…¥å¾…ç´¢å¼•æ ˆã€‚
+	 * @param file	æŒ‡å‘æ–‡ä»¶å¤¹çš„æ–‡ä»¶å¯¹è±¡
+	 * @return æ˜¯å¦åº”è¯¥å‹æ ˆ
 	 */
 	private boolean isQualifiedDirectory(File file) {
 		if (file.getName().equals(".") || file.getName().equals("..")) return false;
@@ -204,11 +197,11 @@ final class IndexLoader {
 		if (new File(file.getPath(), ".nomedia").exists()) return false;
 		return true;
 	}
-	
+
 	/**
-	 * ÅĞ¶ÏÒ»¸öÎÄ¼şÊÇ·ñÓ¦¸Ã½øĞĞË÷Òı¡£
-	 * @param file	Ö¸ÏòÎÄ¼şµÄÎÄ¼ş¶ÔÏó
-	 * @return ÊÇ·ñÓ¦¸ÃË÷Òı
+	 * åˆ¤æ–­ä¸€ä¸ªæ–‡ä»¶æ˜¯å¦åº”è¯¥è¿›è¡Œç´¢å¼•ã€‚
+	 * @param file	æŒ‡å‘æ–‡ä»¶çš„æ–‡ä»¶å¯¹è±¡
+	 * @return æ˜¯å¦åº”è¯¥ç´¢å¼•
 	 */
 	private boolean isQualifiedFile(File file) {
 		if (!isIndexDotPrefix && file.getName().startsWith(".")) return false;
@@ -216,10 +209,10 @@ final class IndexLoader {
 		if (!isIndexAllType && FileInfo.mimeType(file.getName()).equals("*.*")) return false;
 		return true;
 	}
-	
+
 	/**
-	 * »ñÈ¡Íâ²¿´æ´¢ÉÏµÄ¿ÉÓÃ¿Õ¼ä´óĞ¡¡£
-	 * @return ¿ÉÓÃ¿Õ¼äµÄ×Ö½ÚÊı
+	 * è·å–å¤–éƒ¨å­˜å‚¨ä¸Šçš„å¯ç”¨ç©ºé—´å¤§å°ã€‚
+	 * @return å¯ç”¨ç©ºé—´çš„å­—èŠ‚æ•°
 	 */
 	private static long getAvailableSpace() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
@@ -231,17 +224,17 @@ final class IndexLoader {
 		}
 		return 0;
 	}
-	
+
 	/**
-	 * ¸ù¾İÊ£Óà¿Õ¼äÅĞ¶ÏË÷ÒıÊÇ·ñÒÑ¹ıÆÚ¡£
-	 * @param data	ÎÄ¼şË÷ÒıÊı¾İ½á¹¹
-	 * @return ÊÇ·ñÒÑ¹ıÆÚ
+	 * æ ¹æ®å‰©ä½™ç©ºé—´åˆ¤æ–­ç´¢å¼•æ˜¯å¦å·²è¿‡æœŸã€‚
+	 * @param data	æ–‡ä»¶ç´¢å¼•æ•°æ®ç»“æ„
+	 * @return æ˜¯å¦å·²è¿‡æœŸ
 	 */
 	public static boolean neededReload(IndexData data) {
-    	if (Math.abs(getAvailableSpace() - data.availableSpace) >= 1024L * 50)  return true;
-    	return false;
+		if (Math.abs(getAvailableSpace() - data.availableSpace) >= 1024L * 50)  return true;
+		return false;
 	}
-	
+
 	@SuppressWarnings("serial")
 	public static class NoSDCardException extends Exception {
 		public NoSDCardException() {
@@ -251,7 +244,7 @@ final class IndexLoader {
 			super(detailMessage);
 		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	public static class DeserializingException extends Exception {
 		public DeserializingException() {
@@ -261,7 +254,7 @@ final class IndexLoader {
 			super(detailMessage);
 		}
 	}
-	
+
 	@SuppressWarnings("serial")
 	public static class SerializingException extends Exception {
 		public SerializingException() {
