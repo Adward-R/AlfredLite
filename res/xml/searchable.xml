@@ -5,6 +5,6 @@
 	android:searchSettingsDescription="@string/search_description"
 	android:includeInGlobalSearch="true"
 	android:searchMode="queryRewriteFromData"
-	android:searchSuggestAuthority="collimator"
+	android:searchSuggestAuthority="AlfredLite"
 	android:searchSuggestIntentAction="android.intent.action.SEARCH">
 </searchable>

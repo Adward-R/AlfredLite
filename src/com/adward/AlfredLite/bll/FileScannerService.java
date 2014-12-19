@@ -20,7 +20,7 @@ public class FileScannerService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		Log.e("COLLIMATOR", "Service launched.");
+		Log.e("AlfredLite", "Service launched.");
 		mDBOperator = new DBOperation(getApplicationContext());
 //		new Thread(new Runnable(){
 //			public void run() {

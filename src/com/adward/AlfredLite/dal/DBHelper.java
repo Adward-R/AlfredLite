@@ -7,7 +7,7 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 	private static final int DB_VERSION = 2;
-	private static final String DB_NAME = "collimator.db";
+	private static final String DB_NAME = "AlfredLite.db";
 
 	public DBHelper(Context context) {
 		super(context, DB_NAME, null, DB_VERSION);
@@ -31,7 +31,7 @@ public class DBHelper extends SQLiteOpenHelper {
 				DBColumns.ViewTable,	DBColumns.FileId, DBColumns.Name, DBColumns.Path, DBColumns.Size, DBColumns.LastModified, DBColumns.TagId, DBColumns.TagName, DBColumns.Type, DBColumns.FileTable,
 				DBColumns.LinkTable, DBColumns.FileId, DBColumns.FileId, DBColumns.TagTable, DBColumns.TagId, DBColumns.TagId));
 		db.execSQL(String.format("CREATE INDEX tag_name_index ON %s (%s)", DBColumns.TagTable, DBColumns.TagName));
-		Log.e("COLLIMATOR", "DB_CREATED");
+		Log.e("AlfredLite", "DB_CREATED");
 		//db.execSQL(String.format("CREATE VIEW view_tag AS SELECT (SELECT %s )", TagColumns.Name))
 //		db.execSQL(String.format("CREATE INDEX filetag_file_index ON filetag (%s)", FileTagColumns.FileId));
 //		db.execSQL(String.format("CREATE INDEX filetag_tag_index ON filetag (%s)", FileTagColumns.TagId));

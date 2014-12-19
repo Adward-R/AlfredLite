@@ -112,9 +112,9 @@ final class IndexLoader {
 		File f;
 		DataOutputStream out = null;
 		try {
-			f = new File(Environment.getExternalStorageDirectory().getPath() + "/.collimator");
+			f = new File(Environment.getExternalStorageDirectory().getPath() + "/.AlfredLite");
 			if (!f.exists()) f.mkdirs();
-			f = new File(Environment.getExternalStorageDirectory().getPath() + "/.collimator/index.dat");
+			f = new File(Environment.getExternalStorageDirectory().getPath() + "/.AlfredLite/index.dat");
 			if (f.exists()) f.delete();
 			out = new DataOutputStream(new FileOutputStream(f));
 			data.write(out);
@@ -144,7 +144,7 @@ final class IndexLoader {
 		if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			throw new NoSDCardException();
 		}
-		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/.collimator/index.dat");
+		File f = new File(Environment.getExternalStorageDirectory().getPath() + "/.AlfredLite/index.dat");
 		if (!f.exists()) {
 			throw new FileNotFoundException();
 		}
@@ -217,7 +217,7 @@ final class IndexLoader {
 	private static long getAvailableSpace() {
 		if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
 			long indexSize = 0;
-			File indexFile = new File(Environment.getExternalStorageDirectory().getPath() + "/.collimator/index.dat");
+			File indexFile = new File(Environment.getExternalStorageDirectory().getPath() + "/.AlfredLite/index.dat");
 			if (indexFile.exists()) indexSize = indexFile.length();
 			StatFs stat = new StatFs(Environment.getExternalStorageDirectory().getPath());
 			return stat.getBlockSize() * stat.getAvailableBlocks() + indexSize;

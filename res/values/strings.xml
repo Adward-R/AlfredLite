@@ -5,7 +5,7 @@
     <string name="search_label">AlfredLite</string>
     <string name="search_description">Fast and effective local search engine</string>
     <string name="search_title">Local files</string>
-    <string name="search_hint_format">Search "%s" using Collimator</string>
+    <string name="search_hint_format">Search "%s" using AlfredLite</string>
     
     <string name="status_default">Loading index, please wait...</string>
     <string name="status_error_preferences">Error while loading preferences.</string>
@@ -99,7 +99,7 @@
 
     <string name="dialog_preferences_title">AlfredLite preferences</string>
 
-    <string name="dialog_help_title">Collimator help</string>
+    <string name="dialog_help_title">AlfredLite help</string>
     <string name="dialog_help_file">help-en.html</string>
     
     <string name="dialog_first_launch_title">Welcome to AlfredLite</string>

@@ -35,7 +35,7 @@ public final class HelpActivity extends Activity {
 				    }
 				});
 			}
-		}, "collimator");
+		}, "AlfredLite");
 		webView.loadUrl("file:///android_asset/" + getString(R.string.dialog_help_file));
 	} 
 }

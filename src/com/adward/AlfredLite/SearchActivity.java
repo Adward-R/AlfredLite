@@ -47,7 +47,7 @@ import java.util.*;
  */
 public class SearchActivity extends Activity implements OnClickListener, OnItemLongClickListener, OnItemSelectedListener, OnItemClickListener {
 
-	public static final String SEARCH_SCHEME = "collimator";
+	public static final String SEARCH_SCHEME = "AlfredLite";
 
 	private static final int DIALOG_OPENAS = 1;
 	private static final int DIALOG_RESULT = 2;
@@ -423,7 +423,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 										intent.setClass(SearchActivity.this, ShortcutActivity.class);
 										intent.setType("*.*");
 										intent.putExtra(Intent.EXTRA_TITLE, mExpression.getName());
-										intent.putExtra(Intent.EXTRA_STREAM, Uri.fromParts("collimator", "search", mExpression.toJSON()));
+										intent.putExtra(Intent.EXTRA_STREAM, Uri.fromParts("AlfredLite", "search", mExpression.toJSON()));
 										startActivity(intent);
 										break;
 									case ITEM_RESULT_PLAYLIST:

@@ -14,7 +14,7 @@ import android.util.Log;
 import com.adward.AlfredLite.R;
 
 public final class GlobalProvider extends ContentProvider {
-    public final static String AUTHORITY = "collimator";
+    public final static String AUTHORITY = "AlfredLite";
     private static final int SEARCH_SUGGEST = 0;
     private static final int SHORTCUT_REFRESH = 1;
     private static final UriMatcher sURIMatcher = buildUriMatcher();
