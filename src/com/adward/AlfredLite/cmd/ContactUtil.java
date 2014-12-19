@@ -6,6 +6,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
+import com.adward.AlfredLite.util.Unicode2Alpha;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,10 +29,11 @@ public class ContactUtil {
         db.execSQL("DROP TABLE IF EXISTS data");
         db.execSQL("CREATE TABLE data ( " +
                 "contactName varchar(20)," +
-                "contactPhoneNum varchar(20)" +
+                "contactPhoneNum varchar(20)," +
+                "contactAlpha varchar(20)" +
                 ")");
 
-        db.execSQL("CREATE INDEX data1_index ON data(contactName,contactPhoneNum)");
+        db.execSQL("CREATE INDEX data1_index ON data(contactName,contactPhoneNum,contactAlpha)");
 
         Uri uri = Uri.parse("content://com.android.contacts/contacts");
         ContentResolver resolver = context.getContentResolver();
@@ -57,6 +59,7 @@ public class ContactUtil {
                 if(mimeType.equals("vnd.android.cursor.item/name")){
                     contactName = data1;//.toLowerCase();
                     cValue.put("contactName", contactName);
+                    cValue.put("contactAlpha", Unicode2Alpha.toAlpha(contactName));
                 }
                 if(mimeType.equals("vnd.android.cursor.item/phone_v2")) {
                     if(isFirstNum){
@@ -67,6 +70,7 @@ public class ContactUtil {
                         ContentValues newcValue = new ContentValues();
                         newcValue.put("contactName",contactName);
                         newcValue.put("contactPhoneNum",data1);
+                        newcValue.put("contactAlpha", Unicode2Alpha.toAlpha(contactName));
                         db.insert("data",null,newcValue);
                     }
                 }
@@ -85,8 +89,9 @@ public class ContactUtil {
         for(int j = 1;j < keys.length;j++){
             totalKey += keys[j].toLowerCase()+"%";
         }
-        Cursor cursor = db.rawQuery("SELECT contactName,contactPhoneNum FROM data WHERE contactName like "
-                +"'"+totalKey+"'"+" or "+ "contactPhoneNum like " +"'"+totalKey+"'", null);
+        Cursor cursor = db.rawQuery("SELECT contactName,contactPhoneNum,contactAlpha FROM data WHERE contactName like "
+                +"'"+totalKey+"'"+" or "+ "contactPhoneNum like " +"'"
+                +totalKey+"'"+" or "+ "contactAlpha like " +"'"+Unicode2Alpha.toAlpha(totalKey)+"'", null);
 
         if(cursor.moveToFirst()){
             for(int i = 0; i < cursor.getCount();i++){

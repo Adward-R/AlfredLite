@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import com.adward.AlfredLite.util.Unicode2Alpha;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,7 +35,9 @@ public class AppUtil {
                 String pkgLabel = pManager.getApplicationLabel(pak.applicationInfo).toString();
                 int flag = 0;
                 for (int j=1;j<keys.length;j++){
-                    if (!pkgLabel.toLowerCase().contains(keys[j].toLowerCase())){
+                    boolean flag1 = pkgLabel.toLowerCase().contains(keys[j].toLowerCase());
+                    boolean flag2 = Unicode2Alpha.toAlpha(pkgLabel).contains(Unicode2Alpha.toAlpha(keys[j]));
+                    if (!flag1&&!flag2){
                         flag++;
                         break;
                     }
