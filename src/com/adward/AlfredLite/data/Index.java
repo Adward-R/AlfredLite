@@ -12,12 +12,14 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.text.Spanned;
 
+import com.adward.AlfredLite.GlobalContext;
 import com.adward.AlfredLite.data.IndexData.DifferentVersionException;
 import com.adward.AlfredLite.data.IndexLoader.DeserializingException;
 import com.adward.AlfredLite.data.IndexLoader.NoSDCardException;
 import com.adward.AlfredLite.data.IndexLoader.SerializingException;
 import com.adward.AlfredLite.util.DigestUtil;
 import com.adward.AlfredLite.util.ThumbnailUtil;
+import com.adward.AlfredLite.cmd.ContactUtil;
 
 /**
  * 包含文件索引的相关操作。
@@ -127,8 +129,10 @@ public final class Index {
 				interrupt();
 				data = null;
 				IndexLoader loader = new IndexLoader(sPrefs);
+				ContactUtil contactUtil = new ContactUtil(GlobalContext.getInstance());
 				try {
 					IndexData newData = loader.reload();
+					contactUtil.reloadContactIndex();
 					IndexLoader.serialize(newData);
 					data = newData;
 					sPrefs.edit().putBoolean("index_is_obsolete", false).commit();

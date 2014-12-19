@@ -906,7 +906,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 
 	private void reloadIndex() {
 		System.out.println("reloadIndex");
-		contactUtil.reloadContactIndex();
 		mSearchResult.clear();
 		mTextStatus.setText(SearchActivity.this.getString(R.string.status_reload_start));
 		mButtonStar.setImageResource(R.drawable.button_reloading);
@@ -914,7 +913,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		mNotificationManager.notify(0, mReloadNotification);
 		Matcher.stopAsyncMatch();
 		Index.reloadEntriesAsync();
-		//reloadDatabase();
 	}
 
 	private void enterPickMode(int type, boolean lock) {
