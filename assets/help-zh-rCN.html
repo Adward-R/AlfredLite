@@ -1,145 +1,399 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-    <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-        <title>如数家珍 帮助</title>
-        <link rel="stylesheet" type="text/css" href="styles.css" media="all" />
-    </head>
-    <body id="#top">
-        <var id="version">v1.0.7</var>
-        <h1>如数家珍</h1>
-        <h2>帮助目录</h2>
-        <ul id="index">
-            <li><a href="#summary">软件简介</a></li>
-            <li><a href="#privacy">隐私声明</a></li>
-            <li><a href="#feature">功能特色</a></li>
-            <li><a href="#grammar">搜索语法</a></li>
-            <li><a href="#examples">应用范例</a></li>
-            <li><a href="#tricks">技巧说明</a></li>
-            <li><a href="#about">关于软件</a></li>
-        </ul>
-        <div>
-            <dl class="content">
-                <dt id="summary">软件简介</dt> 
-                <dd>　　极致的搜索速度、快捷的操作方式以及强大的处理功能——如数家珍就是集以上特点于一身的本地搜索软件。通过这款小巧精致的软件，用户可以轻松的从海量数据中找到需要的文件，并根据需要加以处理。</dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<style>
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote {
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: "Helvetica Neue", Helvetica, "Hiragino Sans GB", Arial, sans-serif;
+    font-size: 13px;
+    line-height: 18px;
+    color: #737373;
+    background-color: white;
+    margin: 10px 13px 10px 13px;
+}
+table {
+	margin: 10px 0 15px 0;
+	border-collapse: collapse;
+}
+td,th {	
+	border: 1px solid #ddd;
+	padding: 3px 10px;
+}
+th {
+	padding: 5px 10px;	
+}
 
-                <dt id="privacy">隐私声明</dt> 
-                <dd>　　我们尽力保护您的隐私。为了实现软件功能，如数家珍"明确声明"会扫描您存储卡上的文件信息，但是您无需为此顾虑，软件没有发送短信或网络访问的权限，不会泄漏您的隐私，请放心使用。</dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+a {
+    color: #0069d6;
+}
+a:hover {
+    color: #0050a3;
+    text-decoration: none;
+}
+a img {
+    border: none;
+}
+p {
+    margin-bottom: 9px;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #404040;
+    line-height: 36px;
+}
+h1 {
+    margin-bottom: 18px;
+    font-size: 30px;
+}
+h2 {
+    font-size: 24px;
+}
+h3 {
+    font-size: 18px;
+}
+h4 {
+    font-size: 16px;
+}
+h5 {
+    font-size: 14px;
+}
+h6 {
+    font-size: 13px;
+}
+hr {
+    margin: 0 0 19px;
+    border: 0;
+    border-bottom: 1px solid #ccc;
+}
+blockquote {
+    padding: 13px 13px 21px 15px;
+    margin-bottom: 18px;
+    font-family:georgia,serif;
+    font-style: italic;
+}
+blockquote:before {
+    content:"\201C";
+    font-size:40px;
+    margin-left:-10px;
+    font-family:georgia,serif;
+    color:#eee;
+}
+blockquote p {
+    font-size: 14px;
+    font-weight: 300;
+    line-height: 18px;
+    margin-bottom: 0;
+    font-style: italic;
+}
+code, pre {
+    font-family: Monaco, Andale Mono, Courier New, monospace;
+}
+code {
+    background-color: #fee9cc;
+    color: rgba(0, 0, 0, 0.75);
+    padding: 1px 3px;
+    font-size: 12px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+pre {
+    display: block;
+    padding: 14px;
+    margin: 0 0 18px;
+    line-height: 16px;
+    font-size: 11px;
+    border: 1px solid #d9d9d9;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+pre code {
+    background-color: #fff;
+    color:#737373;
+    font-size: 11px;
+    padding: 0;
+}
+sup {
+    font-size: 0.83em;
+    vertical-align: super;
+    line-height: 0;
+}
+* {
+	-webkit-print-color-adjust: exact;
+}
+@media screen and (min-width: 914px) {
+    body {
+        width: 854px;
+        margin:10px auto;
+    }
+}
+@media print {
+	body,code,pre code,h1,h2,h3,h4,h5,h6 {
+		color: black;
+	}
+	table, pre {
+		page-break-inside: avoid;
+	}
+}
+</style>
+<title>**Project of Intelligent Terminal Course**</title>
 
-                <dt id="feature">功能特色</dt>
-                <dd>　　机能越来越强，功能越来越多，这是智能手机带给我们的直观感受。只要你愿意，那就是一台mp3、游戏机亦或是掌上电脑。但与之而来的问题是，与强大功能伴生的海量数据，如何从中快速准确的找到自己需要的文件？</dd>
-                <dd>　　如数家珍便是基于以上问题设计出来的一款软件。让用户快速、准确、方便的找到需要的文件，这是我们的要求。让用户感到这款软件不可或缺，是我们的目的。如数家珍具有以下特性：</dd>
-                <dd>
-                    <dl class="innercontent">
-                        <dt>飞快的搜索速度</dt>
-                        <dd>基于索引方式的搜索，不需要搜索按钮，每一次键入都能即时获得匹配结果。多线程设计，保证用户使用的流畅度。智能模糊匹配，不用输入全部关键字，看到结果便可打住！</dd>
-                        <dt>便捷的首字母搜索</dt>
-                        <dd>觉得汉字输入麻烦？现在只需要键入首字母就可搜索了，省心省力，方便快捷！此功能同时还支持日语平假名片假名。</dd>
-                        <dt>智能感知索引重建</dt>
-                        <dd>用户不用担心文件索引数据库过期，软件可以设置为需要时智能在后台重载索引，此过程完全不需要用户干预。</dd>
-                        <dt>多种匹配条件支持</dt>
-                        <dd>简单到通配符，复杂到正则表达式，还可以通过文件大小、日期、类型、文件夹等多种条件进行搜索匹配。</dd>
-                        <dt>同系统紧密集成</dt>
-                        <dd>不但可以在系统全局搜索中调用此软件，包括GMail、彩信在内的众多应用，也可以由本软件来执行文件选取操作，轻松找到要发送的文件。</dd>
-                        <dt>灵活的结果处理</dt>
-                        <dd>我们认为用户需要的不仅仅是查看搜索结果那么简单，我们为您提供了很多额外的结果处理方案。包括将文件创建为桌面快捷方式、将整个结果保存为播放列表等等，最大程度满足用户心中所想的需求。</dd>
-                        <dt>人性化的用户界面</dt>
-                        <dd>主界面简洁明了，操作使用友好直观。默认启用对图片、音乐、视频文件的缩略图或封面预览，在摘要显示方式下更可以显示文本、应用程序、压缩文档的摘要说明，令操作更加得心应手，使用的过程赏心悦目。</dd>
-                    </dl>
-                </dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+</head>
+<body>
+<h1>AlfredLite 使用帮助文档</h1>
 
-                <dt id="grammar">搜索语法</dt>
-                <dd>　　搜索关键词是以空格分隔的多组搜索条件，文件必须同时满足所有条件才会列入被搜索结果。匹配关键词会在文件名称中高亮显示出来。</dd>
-                <dd>　　以下列出的斜体下划线为范例关键词，紧跟其后为相应的语法解释。</dd>
-                <dd>
-                    <dl class="innercontent">
-                        <dt>按文件名搜索</dt>
-                        <dd>范例: <em>world</em></dd>
-                        <dd>指定文件名中必须包含字符串"world"。最简单的搜索条件。</dd>
-                        <dd>范例: <em>only*my</em></dd>
-                        <dd>指定文件名中必须包含如下组合："only"+任意字符串+"my"。星号"*"可代表任意字符串，问号"?"可代表单个任意字符。</dd>
-                        <dd>范例: <em>pop|classic</em></dd>
-                        <dd>指定文件名必须包含字符串"pop"或者"classic"。竖线"|"表示两边的词组间是或的关系。</dd>
-                        <dt>按文件夹搜索</dt>
-                        <dd>范例: <em>/folder</em></dd>
-                        <dd>指定文件路径必须包含"folder"。也可以用"\"符号，前置后置均可。</dd>
-                        <dt>按文件大小搜索</dt>
-                        <dd>范例: <em>&gt;10m</em></dd>
-                        <dd>指定文件大小必须大于10MB。可以使用小数，支持的单位包括 K, M, G, E 或是 B(默认), KB, MB, GB, EB，大小写均可。</dd>
-                        <dt>按修改日期搜索</dt>
-                        <dd>范例: <em>:7d</em></dd>
-                        <dd>指定文件修改时间是在7天内。可以使用小数，支持的单位包括 H(小时)，D(默认，天)，W(周)，M(月)，Y(年)，大小写均可。</dd>
-                        <dt>按文件类型搜索</dt>
-                        <dd>范例: <em>mt:video</em></dd>
-                        <dd>指定文件的MIME类型必须包含字符串"video"。大多数情况这个语法可以用左上角的搜索范围选择替代。通常参数"video"匹配已知类型的视频文件，"audio"匹配已知类型的音乐文件，"image"匹配已知类型的图像文件，"text"匹配已知类型的纯文本文件。</dd>
-                        <dt>使用正则表达式</dt>
-                        <dd>范例: <em>re:\d{5}</em></dd>
-                        <dd>指定文件名中包含连续5个数字。若在首选项中没有启用正则表达式，可以用这个语法临时指定紧跟的表达式为正则表达式。可以和上述的文件名、文件路径及MIME类型的语法结合使用。正则表达式的语法过于复杂不在此处赘述。</dd>
-                        <dt>排除指定条件</dt>
-                        <dd>范例: <em>!/temp</em></dd>
-                        <dd>指定文件不在"temp"路径下。感叹号将后续条件取反，仅有不满足后续条件的文件才能通过匹配。可以和上面所有的语法结合使用。</dd>
-                    </dl>
-                </dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+<hr />
 
-                <dt id="examples">应用范例</dt>
-                <dd>　　示例1：我喜欢用手机听音乐，我喜欢形形色色的音乐，总是看到新专辑就把它下到手机里好好欣赏一番。但有时候下了新的专辑，而卡上歌曲太多不好找，搞不好就放在那里被遗忘了。用如数家珍，就可以保证我无一忘记。只需在搜索时限定搜索范围为音乐，关键词指定平时存放音乐的文件夹，按修改时间降序排序，之后选择将搜索结果保存成播放列表。OK，这样就可以保证您可以把你新下的歌曲一个不漏的全听完啦。</dd>
-                <dd>　　示例2：今天去游玩，用手机拍了好些个照片，回来想一一欣赏，但又觉得找起来麻烦，怎么办？使用如数家珍，在搜索的时候，先限定搜索范围为图片，关键词限定日期是1天之内的（请使用这个关键词":1d"，注意":"是必须的，表示一个时间表达式，具体可以参考帮助文档）。好了，看是不是今天拍的照片都显示出来了。之后只需将搜索结果建立一个快捷搜索。这样，每次您在桌面点开您建立的快捷搜索，当可以显示当日新拍的照片。</dd>
-                <dd>　　示例3：手机存储空间不够了，这是每个人都会遇到的事，怎么办？删！怎么删？优先从大文件开始删。如数家珍提供了限定文件大小的搜索机制，在搜索时限定关键词“>100m”，这样就会搜索出大于100兆的文件，方便用户删除。什么，你要全部删了？你只需点右上角按钮，对整个文件进行批量删除，是不是很方便啊（为了防止误操作，删除功能需要在首选项里启用才会生效）。</dd>
-                <dd>　　示例4：有一本不错的电子书想发送给朋友，还要一层一层的文件夹点进去找到，然后再发送么？没这个必要！打开GMail，添加附件，选择如数家珍，通过搜索快速找到要发送的附件，然后发送吧！当然也可以直接启动如数家珍进行搜索，然后在长按出现的操作列表中，选择发送到GMail，相当方便吧~如果是通过彩信发送图片也可以如此操作哦！</dd>
-                <dd>　　以下是本软件的一些范例关键词，可以点按以执行对应的搜索。注意，由于个人习惯不同，在您的设备上不一定能得到预期的结果。</dd>
-                <dd>
-                    <dl class="innercontent">
-                        <dt>名称包含my的mp3文件</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('.mp3 my');"><em>.mp3 my</em></a></dd>
-                        <dt>Classic目录下的音乐</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('/classic mt:audio');"><em>/classic mt:audio</em></a></dd>
-                        <dt>全部视频和音频文件</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('mt:video|audio');"><em>mt:video|audio</em></a></dd>
-                        <dt>昨天下载到down文件夹的txt小说</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('.txt /down :1d');"><em>.txt /down :1d</em></a></dd>
-                        <dt>超过100M的非视频文件</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('>100m !mt:video');"><em>&gt;100m !mt:video</em></a></dd>
-                        <dt>一个月之前的旧照片</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('/dcim mt:image !:1m');"><em>/dcim mt:image !:1m</em></a></dd>
-                        <dt>银行19位数字帐号命名的txt文件</dt>
-                        <dd><a href="javascript:window.AlfredLite.doSearch('re:^\\d{19}\\.txt$');"><em>re:^\d{19}\.txt$</em></a></dd>
-                    </dl>
-                </dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+<h3><strong>Project of Intelligent Terminal Course</strong></h3>
 
-                <dt id="tricks">技巧说明</dt>
-                <dd>
-                    <dl class="innercontent">
-                        <dt>使用全键盘皮肤</dt>
-                        <dd>想要高效的利用起来各种高级搜索功能吗，给你的输入法选择一款全键盘皮肤吧！</dd>
-                        <dt>快速开始新搜索</dt>
-                        <dd>如果您的设备有搜索硬按键，按下搜索键便能清空当前输入及范围设置，开始一次新的搜索。</dd>
-                        <dt>不能显示缩略图?</dt>
-                        <dd>对于图片及视频，缩略图从其本身文件中提取；对于音乐及文本文件，将在其所在文件夹中依次搜索 AlbumArt.jpg, cover.jpg, folder.jpg 三个图像文件，以找到的第一个作为其缩略图。</dd>
-                        <dt>滑动卷屏缓慢?</dt>
-                        <dd>多数情况是由于剩余内存不足造成的，请用第三方任务管理器关闭部分程序再进行操作。</dd>
-                        <dt>有不想被索引的文件夹?</dt>
-                        <dd>在不想被索引的文件夹下新建一个名为.nomedia的文件即可，以后重建索引时将忽略这个文件夹。</dd>
-                    </dl>
-                </dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
+<p><strong>2014-15 Autumn, ZJU</strong></p>
 
-                <dt id="about">关于软件</dt>
-                <dd>　　我们衷心的希望用户在使用如数家珍的过程中感到方便和愉快。如果有问题和建议，欢迎使用邮件和我们联系。</dd>
-                <dd>
-                    <dl class="innercontent">
-                        <dt>开发团队</dt>
-                        <dd><strong>Pastry</strong> Android开发团队，目前仅由两名研究生组成，如数家珍是团队的首个作品。</dd>
-                        <dt>软件首页</dt>
-                        <dd><a href="http://cm.toraleap.com">http://cm.toraleap.com</a></dd>
-                    </dl>
-                </dd>
-                <dd class="gototop"><a href="#top">回目录</a></dd>
-            </dl>
-        </div> 
-    </body>
+<p>董可扬 | 祁烨 | 秦昇</p>
+
+<hr />
+
+<h2>I. 软件简介</h2>
+
+<blockquote><p>  AlfreadLite原型来自于Mac系统下的快速启动工具Alfred 2，是一款基于Android系统的本地搜索软件。AlfredLite集极致速度、快捷操作、强大处理于一身。它的界面干净，透明质感接近widget效果；操作简单，只要输入按下搜索即可享用；命令强大，只要稍加了解就可极大提高搜索效率。通过这款小巧精致的软件，广大Andriod用户可以轻松享有IOS用户习惯拥有的特权，从杂乱应用与海量数据中立刻找到需要的内容，并直接加以处理。</p></blockquote>
+
+<hr />
+
+<h2>II. 权限声明</h2>
+
+<blockquote><p>  由于需要进行本地搜索，AlfredLite会对您本地的数据进行扫描，并建立索引。但请您放心，AlfredLite无联网、短信、通话等权限，且您的数据仅用于功能的实现，您可确保隐私无忧。</p></blockquote>
+
+<hr />
+
+<h2>III.功能介绍</h2>
+
+<blockquote><p>  随着智能手机的高速普及，用户手机的存储空间越来越大，APP越装越多，文件不断产生，搭载安卓平台一直因为碎片化的文件管理方式被人诟病。缺乏一个高效的本地搜索插件，有时让用户不知本地文件的踪迹，上百个的APP中也很难立刻找到自己想用的那一个。</br></br></p>
+
+<p>  AlfredLite针对这个用户痛点，支持命令式搜索，能够让用户快速、准确地找到需要的文件，它有以下功能与特性：</p></blockquote>
+
+<ul>
+<li><h3><em>建立索引</em></h3>
+
+<ul>
+<li>首次使用会对您本地的文件与应用自动建立索引，之后实现基于索引方式的搜索；</li>
+<li>多线程设计，保证用户使用的流畅度。每次输入，几乎立刻出现结果，不需要任何等待时间；</li>
+<li>AlfredLite还能智能感知索引数据库文件是否过期，并提醒用户选择是否需要更新索引数据库，在后台重载索引，保证搜索一直高效。
+</br></br></li>
+</ul>
+</li>
+<li><h3><em>命令式搜索</em></h3>
+
+<ul>
+<li><h4>应用搜索</h4>
+
+<ul>
+<li>默认命令<code>a [搜索内容]</code>；</li>
+<li>可点击右上角星星，选择命令搜索自定义选项，或在首选项中修改应用搜索命令的关键词；</li>
+<li>支持在搜索内容中键入空格，如输入<code>a k1 k2</code>，则在包名与应用名中同时搜索具有k1、k2的应用；</li>
+<li>结果显示应用名和包名。</li>
+</ul>
+</li>
+<li><h4>联系人搜索</h4>
+
+<ul>
+<li>默认命令<code>c [搜索内容]</code>；</li>
+<li>可点击右上角星星，选择命令搜索自定义选项，或在首选项中修改联系人搜索命令的关键词；</li>
+<li>支持不键入搜索内容，直接输入<code>c </code>，显示所有联系人的信息；</li>
+<li>支持对联系人号码和联系人姓名的搜索；</li>
+<li>结果显示联系人姓名与号码。
+</br></br></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><h3><em>模糊搜索</em></h3>
+
+<ul>
+<li>每次输入不需要输入全部关键字，也不需要按下搜索按钮，就会立刻获得实时匹配到的结果，看到结果即可打住；</li>
+<li>为使用汉字的你提供便利，不需要输入汉字，只要键入首字母，就可以根据首字母序列进行匹配；</li>
+<li>同时支持日语评价片假名的罗马音搜索。
+</br></br></li>
+</ul>
+</li>
+<li><h3><em>多种匹配</em></h3>
+
+<ul>
+<li>支持类型搜索，选择左上角图片、音乐、视频、文档、应用等即可显示全部选中类型的文件；</li>
+<li>可以通过文件大小、日期、类型、文件夹等多种条件进行搜索匹配；</li>
+<li>支持搜索语句中通配符、正则表达式的使用。
+</br></br></li>
+</ul>
+</li>
+<li><h3><em>结果处理选项</em></h3>
+
+<ul>
+<li>支持查看结果统计信息，了解搜索到的文件数量、占用空间、来源，显示索引条目与更新时间；</li>
+<li>支持修改排序方式为修改日期、文件类型、文件大小、文件路径、文件扩展名、文件首字母、路径首字母等，支持升序或降序；</li>
+<li>支持将文件创建为桌面快捷方式，并可以自定义快捷方式的名字；</li>
+<li>支持将搜索到的音乐结果保存为播放列表；</li>
+<li>支持批量删除搜索到的结果。
+</br></br></li>
+</ul>
+</li>
+<li><h3><em>偏好定制</em></h3>
+
+<ul>
+<li>设置在重建索引时是否提醒用户；</li>
+<li>设置显示预览图，允许搜索结果直接加载缩略图，并在搜索图片、音乐、视频文件等的结果时显示；</li>
+<li>设置显示摘要，可以显示文本、应用程序、压缩文档的摘要说明；</li>
+<li>设置显示状态栏、欢迎屏幕等；</li>
+<li>支持修改显示布局为平铺、图标或摘要。
+</br></br></li>
+</ul>
+</li>
+<li><h3><em>系统紧密结合</em></h3>
+
+<ul>
+<li>对所有搜索结果，都可以通过单击的形式直接跳转到对应应用或文件；</li>
+<li>系统全局搜索中可直接调用此软件；</li>
+<li>包括彩信等在选取文件时，也可交由AlfredLite完成，轻松找到要发送的文件。
+</br></br></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+
+<h2>IV. 语法说明</h2>
+
+<blockquote><p>  搜索关键词是以空格分隔的多组搜索条件，文件必须同时满足所有条件才会列入被搜索结果。匹配关键词会在文件名称中高亮显示出来。以下列出的斜体下划线为范例关键词，紧跟其后为相应的语法解释。　</p></blockquote>
+
+<ul>
+<li><h3><em>按文件名搜索</em></h3>
+
+<ul>
+<li><h4>范例: <code>world</code></h4>
+
+<pre><code>  指定文件名中必须包含字符串"world"。最简单的搜索条件。
+</code></pre></li>
+<li><h4>范例: <code>only *my</code></h4>
+
+<pre><code>  指定文件名中必须包含如下组合："only"+任意字符串+"my"。星号"*"可代表任意字符串，问号"?"可代表单个任意字符。
+</code></pre></li>
+<li><h4>范例: <code>pop|classic</code></h4>
+
+<pre><code>  指定文件名必须包含字符串"pop"或者"classic"。竖线"|"表示两边的词组间是或的关系。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>按文件夹搜索</em></h3>
+
+<ul>
+<li><h4>范例: <code>/folder</code></h4>
+
+<pre><code>  指定文件路径必须包含"folder"。也可以用"\"符号，前置后置均可。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>按文件大小搜索</em></h3>
+
+<ul>
+<li><h4>范例: <code>&gt;10m</code></h4>
+
+<pre><code>  指定文件大小必须大于10MB。可以使用小数，支持的单位包括 K, M, G, E 或是 B(默认), KB, MB, GB, EB，大小写均可。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>按修改日期搜索</em></h3>
+
+<ul>
+<li><h4>范例: <code>:7d</code></h4>
+
+<pre><code>  指定文件修改时间是在7天内。可以使用小数，支持的单位包括 H(小时)，D(默认，天)，W(周)，M(月)，Y(年)，大小写均可。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>按文件类型搜索</em></h3>
+
+<ul>
+<li><h4>范例: <code>mt:video</code></h4>
+
+<pre><code>  指定文件的MIME类型必须包含字符串"video"。大多数情况这个语法可以用左上角的搜索范围选择替代。通常参数"video"匹配已知类型的视频文件，"audio"匹配已知类型的音乐文件，"image"匹配已知类型的图像文件，"text"匹配已知类型的纯文本文件。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>使用正则表达式</em></h3>
+
+<ul>
+<li><h4>范例: <code>re:\d{5}</code></h4>
+
+<pre><code>  指定文件名中包含连续5个数字。若在首选项中没有启用正则表达式，可以用这个语法临时指定紧跟的表达式为正则表达式。可以和上述的文件名、文件路径及MIME类型的语法结合使用。正则表达式的语法过于复杂不在此处赘述。
+</code></pre></li>
+</ul>
+</li>
+<li><h3><em>排除指定条件</em></h3>
+
+<ul>
+<li><h4>范例: <code>!/temp</code></h4>
+
+<pre><code>  指定文件不在"temp"路径下。感叹号将后续条件取反，仅有不满足后续条件的文件才能通过匹配。可以和上面所有的语法结合使用。
+</code></pre></li>
+</ul>
+</li>
+<li><h3>更多搜索案例</h3>
+
+<ul>
+<li><p><code>.mp3 my</code></p>
+
+<pre><code>  名称包含my的mp3文件 
+</code></pre></li>
+<li><p> <code>/classic mt:audio</code></p>
+
+<pre><code>  Classic目录下的音乐
+</code></pre></li>
+<li><p> <code>mt:vi   deo|audio</code></p>
+
+<pre><code>  全部视频和音频文件 
+</code></pre></li>
+<li><p> <code>.txt /down :1d</code></p>
+
+<pre><code>  昨天下载到down文件夹的txt小说 
+</code></pre></li>
+<li><p> <code>&gt;100m !mt:video</code></p>
+
+<pre><code>  超过100M的非视频文件 
+</code></pre></li>
+<li><p> <code>/dcim mt:image !:1m</code></p>
+
+<pre><code>  一个月之前的旧照片
+</code></pre></li>
+<li><p> <code>re:^\d{19}\.txt$</code></p>
+
+<pre><code>  银行19位数字帐号命名的txt文件 
+</code></pre></li>
+</ul>
+</li>
+</ul>
+
+
+<hr />
+
+<h3>V.联系我们</h3>
+
+<pre><code>董可扬 | 3130000020 | 18858185924 | adward_r@icloud.com
+祁　烨 | 3120000386 | 18866115208 | qiye429@163.com
+秦　昇 | 3120000060 | 18868110628 | henryoier@gmail.com
+</code></pre>
+</body>
 </html>

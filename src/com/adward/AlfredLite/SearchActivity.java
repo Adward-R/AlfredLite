@@ -161,7 +161,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 	}
 
 	private void initUtils() {
-
 		System.out.println("initUtils");
 		Intent intent = new Intent();
 		intent.setClass(SearchActivity.this, SearchActivity.class);
@@ -240,7 +239,7 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 		} else if (RingtoneManager.ACTION_RINGTONE_PICKER.equals(action)) {
 			enterPickMode(2, true);
 		} else {
-			Log.e("else", action);
+			//Log.e("else", action);
 			mExpression = new Expression(getApplicationContext());
 		}
 
@@ -817,12 +816,6 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 
 	private void doSearch() {
 		//System.out.println("doSearch");
-		if (Index.getStatus() == Index.STATUS_READY || Index.getStatus() == Index.STATUS_OBSOLETE) {
-			isSearching = true;
-			Index.interrupt();
-			mSearchResult.clear();
-
-			//INTERFACE WITH NEWLY IMPLEMENTED FUNCTIONS
 			String key = mExpression.getKey();
 			String[] str = key.split(" ");
 			if (str[0].equals(appCmd) && (str.length > 1 || key.equals(appCmd + " "))) {
@@ -875,13 +868,18 @@ public class SearchActivity extends Activity implements OnClickListener, OnItemL
 				});
 				mTextStatus.setText(apps.size() + " contacts found.");
 			} else {
-				mode = 0;
-				mListEntries.setAdapter(mListAdapter);
-				mExpression.matchAsync();
+				if (Index.getStatus() == Index.STATUS_READY || Index.getStatus() == Index.STATUS_OBSOLETE) {
+					mode = 0;
+					isSearching = true;
+					Index.interrupt();
+					mSearchResult.clear();
+					mListEntries.setAdapter(mListAdapter);
+					mExpression.matchAsync();
+				}
 			}
 
 		}
-	}
+
 
 	private void doSort() {
 		System.out.println("doSort");

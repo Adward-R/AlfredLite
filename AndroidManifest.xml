@@ -4,14 +4,17 @@
       android:versionCode="9"
       android:versionName="1.0.7r2">
     <application android:icon="@drawable/icon" android:label="@string/app_name" android:name=".GlobalContext">
-        <activity android:name=".SearchActivity"
-                  android:label="@string/app_name"
-                  android:theme="@style/Theme.SearchActivity.Wallpaper"
-                  android:configChanges="orientation|keyboardHidden">
+        <activity android:name=".WelcomeActivity"
+                  android:theme="@android:style/Theme.Light.NoTitleBar.Fullscreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".SearchActivity"
+                  android:label="@string/app_name"
+                  android:theme="@style/Theme.SearchActivity.Wallpaper"
+                  android:configChanges="orientation|keyboardHidden">
             <intent-filter>
                 <action android:name="android.intent.action.CREATE_SHROTCUT" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -62,10 +65,6 @@
                 <data android:mimeType="*/*" />
             </intent-filter>
 		</activity>
-
-        <activity android:name=".AppSearchActivity"
-                android:label="">
-        </activity>
 
         
 		<provider android:name=".ext.GlobalProvider"
